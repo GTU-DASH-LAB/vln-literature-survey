@@ -19,11 +19,11 @@ Author: Fouad Aladhami — Gebze Technical University
 | [`seeds_zero_shot.md`](seeds_zero_shot.md) | 35 seed works grouped A–F, with resolved venues and citation counts. Used as a recall check on every query and as the snowballing entry point. |
 | [`index.html`](index.html) | Self-contained interactive page — the outline, the queries with copy buttons, and the seed table with sorting and filtering. No external requests. |
 | `corpus_seeds.{csv,json}` | The seed table, machine-readable. |
-| `corpus_raw.csv` | Every hit from the Q1 harvest, one row per record × source. These are the PRISMA *identification* counts. |
+| `corpus_raw.csv` | Every hit, one row per record × source, tagged with the query set and phrase that found it. These are the PRISMA *identification* counts. |
 | `corpus_screening.csv` | The deduplicated corpus with empty `decision` / `reason_code` columns — the sheet screening is actually done in. |
-| `harvest_report.json` | Per-source and per-phrase hit counts for the PRISMA flow diagram. |
+| `harvest_report.json` | Per-set, per-source and per-phrase hit counts for the PRISMA flow diagram. |
 | `fetch_seeds.py` | Resolves the seed list against OpenAlex, then re-counts citations through the Semantic Scholar batch endpoint. |
-| `harvest_q1.py` | Runs the Q1 phrase set against OpenAlex, Semantic Scholar and arXiv; deduplicates and writes the corpus files. |
+| `harvest.py` | Runs the four query sets against OpenAlex, Semantic Scholar and arXiv; deduplicates and writes the corpus files. |
 
 ## The zero-shot angle
 
@@ -44,9 +44,22 @@ Table VI in the outline reports.
 ## Reproducing the corpus
 
 ```bash
-python3 harvest_q1.py     # writes corpus_raw.csv, corpus_screening.csv, harvest_report.json
-python3 fetch_seeds.py    # refreshes the seed table's citation counts
+python3 harvest.py          # all four query sets -> corpus_raw.csv, corpus_screening.csv, harvest_report.json
+python3 harvest.py core     # just one set
+python3 fetch_seeds.py      # refreshes the seed table's citation counts
 ```
+
+Four query sets run, and the split matters:
+
+| Set | What it covers | Why it exists |
+|---|---|---|
+| `core` | Q1 — the `"…navigation"` phrase family | High precision, the query a Scopus session would run |
+| `recall` | Q2/Q4 — `visual language navigation`, `object goal navigation`, `embodied navigation` | Q1 alone recovered **8 of 35** seed works. The field does not agree on what to call the task. |
+| `zeroshot` | Q5 — zero-shot / training-free / open-vocabulary navigation | The survey's Section IX; tagged separately because precision is low |
+| `enabler` | Open-vocabulary maps, 3D scene graphs, code-as-policy | VLMaps, ConceptGraphs and Code as Policies never say "navigation", and Sections 6.5, 9.3 and 9.6 depend on them |
+
+The seed list in `seeds_zero_shot.md` is the recall check: run the queries, then verify
+the result set contains groups A and B. That check is what produced the table above.
 
 Both use only public APIs (OpenAlex, Semantic Scholar, arXiv) and need no keys.
 

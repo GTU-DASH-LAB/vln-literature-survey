@@ -1,21 +1,35 @@
 #!/usr/bin/env python3
-"""Harvest the Q1 core corpus for the VLN survey.
+"""Harvest the screening corpus for the VLN survey.
 
-Q1 is the high-precision core query defined in search_protocol.md §5.1. Scopus itself
-needs an institutional key, so this runs the *same phrase set* against the three
-databases that are openly queryable, and writes the result in a form that a Scopus or
-Web of Science CSV export can be merged into later without redoing anything:
+Runs four query sets (search_protocol.md §5) against the three openly queryable
+databases, then deduplicates across all of them:
 
-  OpenAlex            title_and_abstract phrase search  — the closest analogue to Scopus TITLE-ABS-KEY
-  Semantic Scholar    bulk search                       — proper CS/CV conference coverage
-  arXiv               ti/abs phrase search              — the preprint stream Scopus cannot see
+  core      Q1 — the "...navigation" phrase family. High precision.
+  recall    Q2/Q4 — the other names this field gives the task: visual language
+            navigation, object goal navigation, embodied navigation. Q1 alone
+            recovered only 8/35 seed works; this set exists because of that.
+  zeroshot  Q5 — zero-shot / training-free / open-vocabulary navigation. Tagged
+            separately, low precision expected.
+  enabler   Open-vocabulary maps, 3D scene graphs and code-as-policy. These never
+            say "navigation" but Sections 6.5, 9.3 and 9.6 depend on them.
+
+  OpenAlex          title_and_abstract phrase search - closest analogue to Scopus TITLE-ABS-KEY
+  Semantic Scholar  bulk search - proper CS/CV conference coverage
+  arXiv             ti/abs phrase search - the preprint stream Scopus cannot see
 
 Window: 2023-01-01 onward (PUBYEAR > 2022).
 
+  python3 harvest.py            # all four sets
+  python3 harvest.py core       # one set
+
 Outputs
-  corpus_raw.csv         every hit, one row per (record × source), with the phrase that found it
-  corpus_screening.csv   deduplicated, with empty decision columns ready for title/abstract screening
-  harvest_report.json    per-source and per-phrase counts — these are the PRISMA identification numbers
+  corpus_raw.csv         every hit, one row per (record x source), with query set and phrase
+  corpus_screening.csv   deduplicated, with empty decision columns ready for screening
+  harvest_report.json    per-set, per-source and per-phrase counts - the PRISMA identification numbers
+
+Scopus and Web of Science need an institutional session and are not harvested here.
+Export them separately and merge on DOI / normalised title; the output is shaped so
+that merge is a straight append.
 """
 import json, csv, re, sys, time, urllib.parse, urllib.request, urllib.error, datetime, os
 from collections import defaultdict
@@ -24,20 +38,60 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 YEAR_FROM = 2023
 UA = {"User-Agent": "gtu-vln-survey-harvester/1.0"}
 
-# ── Q1, verbatim from search_protocol.md §5.1 ────────────────────────────────
-PHRASES = [
-    "vision-and-language navigation",
-    "vision language navigation",
-    "vision-language navigation",
-    "language-guided navigation",
-    "language guided navigation",
-    "language-driven navigation",
-    "language-conditioned navigation",
-    "instruction-following navigation",
-    "instruction following navigation",
-    "natural language navigation",
-    "text-guided navigation",
-]
+# ── Query sets (search_protocol.md §5) ─────────────────────────────
+QUERY_SETS = {
+    # Q1 core, verbatim from §5.1
+    "core": [
+        "vision-and-language navigation",
+        "vision language navigation",
+        "vision-language navigation",
+        "language-guided navigation",
+        "language guided navigation",
+        "language-driven navigation",
+        "language-conditioned navigation",
+        "instruction-following navigation",
+        "instruction following navigation",
+        "natural language navigation",
+        "text-guided navigation",
+    ],
+    # Q2/Q4 recall — the other names the field uses for the same task
+    "recall": [
+        "visual language navigation",
+        "visual-language navigation",
+        "object goal navigation",
+        "object-goal navigation",
+        "objectgoal navigation",
+        "object navigation",
+        "embodied navigation",
+        "instruction navigation",
+        "semantic navigation",
+        "demand-driven navigation",
+        "remote object grounding",
+        "vision-language-action model",
+    ],
+    # Q5 zero-shot axis — tagged separately, low precision expected
+    "zeroshot": [
+        "zero-shot navigation",
+        "zero shot navigation",
+        "training-free navigation",
+        "open-vocabulary navigation",
+        "open vocabulary navigation",
+        "zero-shot object navigation",
+        "zero-shot object goal navigation",
+        "language-grounded robot navigation",
+    ],
+    # §6.5 / 9.3 / 9.6 enablers — these papers never say "navigation"
+    "enabler": [
+        "open-vocabulary map",
+        "visual language map",
+        "open-vocabulary scene graph",
+        "open-vocabulary 3d scene graph",
+        "queryable scene representation",
+        "open-set 3d mapping",
+        "code as policies",
+        "language model programs",
+    ],
+}
 
 def log(*a): print(*a, file=sys.stderr, flush=True)
 
@@ -61,10 +115,10 @@ def norm_title(t):
 def blank():
     return {"title": "", "abstract": "", "year": None, "venue": "", "doi": "", "arxiv": "",
             "authors": "", "n_authors": 0, "citations": None, "url": "", "type": "",
-            "sources": set(), "phrases": set(), "oa": False}
+            "sources": set(), "phrases": set(), "qsets": set(), "oa": False}
 
 # ── OpenAlex ─────────────────────────────────────────────────────────────────
-def openalex(phrase):
+def openalex(phrase, qset):
     out, cursor, page = [], "*", 0
     while cursor and page < 12:
         f = f'title_and_abstract.search:"{phrase}",from_publication_date:{YEAR_FROM}-01-01'
@@ -95,7 +149,7 @@ def openalex(phrase):
             r["url"] = (w.get("ids") or {}).get("openalex", "")
             r["type"] = w.get("type") or ""
             r["oa"] = bool((w.get("open_access") or {}).get("is_oa"))
-            r["sources"].add("openalex"); r["phrases"].add(phrase)
+            r["sources"].add("openalex"); r["phrases"].add(phrase); r["qsets"].add(qset)
             out.append(r)
         cursor = (d.get("meta") or {}).get("next_cursor")
         page += 1
@@ -103,8 +157,8 @@ def openalex(phrase):
     return out
 
 # ── Semantic Scholar bulk search ─────────────────────────────────────────────
-def s2_bulk():
-    q = " | ".join(f'"{p}"' for p in PHRASES)
+def s2_bulk(phrases, qset):
+    q = " | ".join(f'"{p}"' for p in phrases)
     fields = ("title,abstract,year,venue,publicationVenue,citationCount,externalIds,authors,"
               "publicationTypes,url,openAccessPdf")
     out, token, page = [], None, 0
@@ -131,9 +185,9 @@ def s2_bulk():
             r["url"] = p.get("url", "")
             r["type"] = ",".join(p.get("publicationTypes") or [])
             r["oa"] = bool(p.get("openAccessPdf"))
-            r["sources"].add("s2")
+            r["sources"].add("s2"); r["qsets"].add(qset)
             low = (r["title"] + " " + r["abstract"]).lower()
-            r["phrases"] = {ph for ph in PHRASES if ph in low} or {"(s2 bulk)"}
+            r["phrases"] = {ph for ph in phrases if ph in low} or {"(s2 bulk)"}
             out.append(r)
         token = d.get("token")
         page += 1
@@ -142,12 +196,12 @@ def s2_bulk():
     return out
 
 # ── arXiv ────────────────────────────────────────────────────────────────────
-def arxiv():
+def arxiv(phrases, qset):
     import xml.etree.ElementTree as ET
     NS = {'a': 'http://www.w3.org/2005/Atom'}
     out = []
-    for i in range(0, len(PHRASES), 4):
-        chunk = PHRASES[i:i + 4]
+    for i in range(0, len(phrases), 4):
+        chunk = phrases[i:i + 4]
         q = " OR ".join(f'abs:"{p}" OR ti:"{p}"' for p in chunk)
         start = 0
         while start < 400:
@@ -175,7 +229,7 @@ def arxiv():
                 r["n_authors"] = len(au)
                 r["url"] = f"https://arxiv.org/abs/{r['arxiv']}"
                 r["type"] = "preprint"; r["oa"] = True
-                r["sources"].add("arxiv")
+                r["sources"].add("arxiv"); r["qsets"].add(qset)
                 low = (r["title"] + " " + r["abstract"]).lower()
                 r["phrases"] = {ph for ph in chunk if ph in low} or set(chunk[:1])
                 out.append(r)
@@ -186,35 +240,47 @@ def arxiv():
     return out
 
 # ── harvest ──────────────────────────────────────────────────────────────────
-report = {"query": "Q1 core (search_protocol.md §5.1)", "window": f"{YEAR_FROM}-01-01 onward",
-          "retrieved": datetime.date.today().isoformat(), "phrases": PHRASES,
-          "per_source": {}, "per_phrase": {}, "note":
+sets = sys.argv[1:] or list(QUERY_SETS)
+for q in sets:
+    if q not in QUERY_SETS:
+        sys.exit(f"unknown query set {q!r}; choose from {', '.join(QUERY_SETS)}")
+
+report = {"query_sets": sets, "window": f"{YEAR_FROM}-01-01 onward",
+          "retrieved": datetime.date.today().isoformat(),
+          "phrases": {q: QUERY_SETS[q] for q in sets},
+          "per_source": defaultdict(int), "per_set": {}, "per_phrase": {}, "note":
           "Scopus and Web of Science require institutional credentials and are not included; "
           "export them separately and merge on DOI / normalised title."}
 allhits = []
 
-log("── OpenAlex ──")
-oa_hits = []
-for p in PHRASES:
-    h = openalex(p)
-    log(f"  {p:<36} {len(h)}")
-    report["per_phrase"][p] = len(h)
-    oa_hits += h
-allhits += oa_hits
-report["per_source"]["openalex"] = len(oa_hits)
+for qset in sets:
+    phrases = QUERY_SETS[qset]
+    log(f"\n══ {qset} ({len(phrases)} phrases) ══")
+    n0 = len(allhits)
 
-log("── Semantic Scholar (bulk) ──")
-s2_hits = s2_bulk()
-log(f"  {len(s2_hits)} records")
-allhits += s2_hits
-report["per_source"]["semantic_scholar"] = len(s2_hits)
+    log("  ── OpenAlex ──")
+    for p in phrases:
+        h = openalex(p, qset)
+        log(f"    {p:<36} {len(h)}")
+        report["per_phrase"][p] = len(h)
+        allhits += h
+        report["per_source"]["openalex"] += len(h)
 
-log("── arXiv ──")
-ax_hits = arxiv()
-log(f"  {len(ax_hits)} records")
-allhits += ax_hits
-report["per_source"]["arxiv"] = len(ax_hits)
+    log("  ── Semantic Scholar (bulk) ──")
+    h = s2_bulk(phrases, qset)
+    log(f"    {len(h)} records")
+    allhits += h
+    report["per_source"]["semantic_scholar"] += len(h)
 
+    log("  ── arXiv ──")
+    h = arxiv(phrases, qset)
+    log(f"    {len(h)} records")
+    allhits += h
+    report["per_source"]["arxiv"] += len(h)
+
+    report["per_set"][qset] = len(allhits) - n0
+
+report["per_source"] = dict(report["per_source"])
 report["raw_records"] = len(allhits)
 log(f"\nraw identification: {len(allhits)}")
 
@@ -239,7 +305,7 @@ for r in allhits:
         merged[k] = r
     else:
         m = merged[k]
-        m["sources"] |= r["sources"]; m["phrases"] |= r["phrases"]
+        m["sources"] |= r["sources"]; m["phrases"] |= r["phrases"]; m["qsets"] |= r["qsets"]
         for f in ("doi", "arxiv", "venue", "abstract", "authors", "url", "type"):
             if not m[f] and r[f]: m[f] = r[f]
         if m["year"] is None: m["year"] = r["year"]
@@ -258,7 +324,7 @@ for t, ks in by_title.items():
     for k in ks[1:]:
         r = merged.pop(k)
         m = merged[keep]
-        m["sources"] |= r["sources"]; m["phrases"] |= r["phrases"]
+        m["sources"] |= r["sources"]; m["phrases"] |= r["phrases"]; m["qsets"] |= r["qsets"]
         for f in ("doi", "arxiv", "venue", "abstract", "authors", "url"):
             if not m[f] and r[f]: m[f] = r[f]
         if (r["citations"] or 0) > (m["citations"] or 0): m["citations"] = r["citations"]
@@ -267,18 +333,20 @@ recs = sorted(merged.values(), key=lambda r: -(r["citations"] or -1))
 report["after_dedup"] = len(recs)
 report["duplicates_removed"] = len(allhits) - len(recs)
 report["multi_source"] = sum(1 for r in recs if len(r["sources"]) > 1)
-report["preprint_only"] = sum(1 for r in recs if r["venue"] == "arXiv (preprint)")
+report["preprint_only"] = sum(1 for r in recs if not r["venue"] or "arxiv" in r["venue"].lower())
+report["per_set_after_dedup"] = {q: sum(1 for r in recs if q in r["qsets"]) for q in sets}
 log(f"after dedup: {len(recs)}  (removed {report['duplicates_removed']})")
 
 # ── write ────────────────────────────────────────────────────────────────────
 RAW = ["title", "year", "venue", "authors", "n_authors", "doi", "arxiv", "citations",
-       "type", "oa", "url", "sources", "phrases", "abstract"]
+       "type", "oa", "url", "sources", "query_sets", "phrases", "abstract"]
 with open(os.path.join(HERE, "corpus_raw.csv"), "w", encoding="utf-8", newline="") as f:
     w = csv.writer(f); w.writerow(RAW)
     for r in allhits:
         w.writerow([r["title"], r["year"], r["venue"], r["authors"], r["n_authors"], r["doi"],
                     r["arxiv"], r["citations"], r["type"], r["oa"], r["url"],
-                    "|".join(sorted(r["sources"])), "|".join(sorted(r["phrases"])), r["abstract"]])
+                    "|".join(sorted(r["sources"])), "|".join(sorted(r["qsets"])),
+                    "|".join(sorted(r["phrases"])), r["abstract"]])
 
 SCREEN = RAW + ["decision", "reason_code", "supervision", "zs_claim", "task", "llm_role",
                 "observation", "scene_repr", "benchmark", "sr", "spl", "real_robot",
@@ -288,11 +356,13 @@ with open(os.path.join(HERE, "corpus_screening.csv"), "w", encoding="utf-8", new
     for r in recs:
         w.writerow([r["title"], r["year"], r["venue"], r["authors"], r["n_authors"], r["doi"],
                     r["arxiv"], r["citations"], r["type"], r["oa"], r["url"],
-                    "|".join(sorted(r["sources"])), "|".join(sorted(r["phrases"])), r["abstract"]]
+                    "|".join(sorted(r["sources"])), "|".join(sorted(r["qsets"])),
+                    "|".join(sorted(r["phrases"])), r["abstract"]]
                    + [""] * (len(SCREEN) - len(RAW)))
 
 json.dump(report, open(os.path.join(HERE, "harvest_report.json"), "w", encoding="utf-8"),
           ensure_ascii=False, indent=1)
 log("\nDONE " + json.dumps({k: v for k, v in report.items()
                             if k in ("raw_records", "after_dedup", "duplicates_removed",
-                                     "multi_source", "preprint_only", "per_source")}))
+                                     "multi_source", "preprint_only", "per_source", "per_set",
+                                     "per_set_after_dedup")}))

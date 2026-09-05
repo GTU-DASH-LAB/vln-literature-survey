@@ -223,6 +223,35 @@ keep only one record per work (prefer the published version; keep the arXiv one 
 Manually sweep NeurIPS, ICLR, ICML **2023–2026** and **CoRL 2023–2025** proceedings pages for
 title/abstract matches on blocks A+B and A+D. Log counts like any other source.
 
+### 5.7 Recall audit — executed 2026-09-05, and what it changed
+
+The audit is the one in `seeds_zero_shot.md`: run the query, then check how many of the
+35 seed works come back. **Q1 alone returned 8 of 35.** Nine of the misses are pre-2023
+and correctly out of window. The other **18 are in window and were genuinely missed**,
+for three distinct reasons:
+
+| Why it was missed | Seeds lost | Fix |
+|---|---|---|
+| The field calls the task something else — `object goal navigation`, `embodied navigation`, `instruction navigation` | CoW, ESC, L3MVN, VLFM, SG-Nav, VoroNav, OpenFMNav, InstructNav, Uni-NaVid | Query set `recall` |
+| Q1 lists `vision language navigation` but **not** `visual language navigation` — a spelling a large minority of the field uses | DiscussNav | Added to `recall` |
+| The paper is an enabler that never uses the word *navigation* at all — it is about maps, scene graphs or code generation | VLMaps, NLMap, ConceptFusion, ConceptGraphs, HOV-SG, Code as Policies | Query set `enabler` |
+
+Consequences for the protocol:
+
+1. **Q1 is not sufficient on its own**, and neither is a Scopus session that runs only
+   Q1. It is a precision query, and the zero-shot half of the survey (Section IX) is
+   exactly where its recall collapses — the papers that most need to be found are the
+   ones that avoid the phrase.
+2. **Run Q2, Q4 and Q5 in Scopus as well**, not just Q1. Report the union in PRISMA, and
+   report per-query counts so the identification numbers stay auditable.
+3. The `enabler` set is tagged separately and is **not** a VLN query. Its hits feed
+   Sections 6.5, 9.3 and 9.6 only. Screen it against IC/EC like any other source, but do
+   not let it inflate the headline "VLN papers found" figure.
+4. Re-run this audit after any query change, and log the before/after seed recall.
+
+`harvest.py` implements all four sets and tags every record with the set and phrase that
+found it, so any of these numbers can be recomputed from `corpus_raw.csv`.
+
 ---
 
 ## 6. Inclusion / exclusion criteria
