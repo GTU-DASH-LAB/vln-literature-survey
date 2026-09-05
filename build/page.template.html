@@ -1,0 +1,932 @@
+<meta charset="utf-8">
+<title>VLN Survey — Plan &amp; Seed Corpus</title>
+<style>
+/*FONTS*/
+
+/* ── tokens ───────────────────────────────────────────────────────────────
+   Two hues do all the work: frontier amber marks the zero-shot / training-free
+   family (the survey's focus), teal marks the trained family and carries links.
+   Magnitude (citations) is deliberately hueless so it never collides with them. */
+:root{
+  --bg:#E7ECEF; --surface:#FBFCFD; --surface-2:#F1F4F6; --surface-3:#E2E8EC;
+  --ink:#0D161C; --ink-2:#46545F; --muted:#5E6C76;
+  --accent-ink:#8E4E06; --cool-ink:#155F80;
+  --line:#CBD5DB; --line-2:#B7C4CC;
+  --accent:#B4640C; --accent-soft:#F6E7D4; --accent-line:#E0BC90;
+  --cool:#1B7BA6; --cool-soft:#DFEDF4; --cool-line:#A8CCDE;
+  --bar:rgba(13,22,28,.13); --bar-hi:rgba(13,22,28,.22); --on-accent:#FFFFFF;
+  --shadow:0 1px 2px rgba(13,22,28,.06), 0 8px 24px -16px rgba(13,22,28,.28);
+  --r:3px;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0B1116; --surface:#121A20; --surface-2:#18222A; --surface-3:#1E2A33;
+    --ink:#DFE7EC; --ink-2:#9AA9B3; --muted:#8A99A4;
+  --accent-ink:#E09A45; --cool-ink:#5FAFD1;
+    --line:#24313A; --line-2:#324450;
+    --accent:#E09A45; --accent-soft:#2E2318; --accent-line:#5C4527;
+    --cool:#5FAFD1; --cool-soft:#132630; --cool-line:#2C4F63;
+    --bar:rgba(223,231,236,.15); --bar-hi:rgba(223,231,236,.26); --on-accent:#12100C;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0B1116; --surface:#121A20; --surface-2:#18222A; --surface-3:#1E2A33;
+  --ink:#DFE7EC; --ink-2:#9AA9B3; --muted:#8A99A4;
+  --accent-ink:#E09A45; --cool-ink:#5FAFD1;
+  --line:#24313A; --line-2:#324450;
+  --accent:#E09A45; --accent-soft:#2E2318; --accent-line:#5C4527;
+  --cool:#5FAFD1; --cool-soft:#132630; --cool-line:#2C4F63;
+  --bar:rgba(223,231,236,.15); --bar-hi:rgba(223,231,236,.26); --on-accent:#12100C;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.7);
+}
+:root[data-theme="light"]{
+  --bg:#E7ECEF; --surface:#FBFCFD; --surface-2:#F1F4F6; --surface-3:#E2E8EC;
+  --ink:#0D161C; --ink-2:#46545F; --muted:#5E6C76;
+  --accent-ink:#8E4E06; --cool-ink:#155F80;
+  --line:#CBD5DB; --line-2:#B7C4CC;
+  --accent:#B4640C; --accent-soft:#F6E7D4; --accent-line:#E0BC90;
+  --cool:#1B7BA6; --cool-soft:#DFEDF4; --cool-line:#A8CCDE;
+  --bar:rgba(13,22,28,.13); --bar-hi:rgba(13,22,28,.22); --on-accent:#FFFFFF;
+  --shadow:0 1px 2px rgba(13,22,28,.06), 0 8px 24px -16px rgba(13,22,28,.28);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:'vln-serif',Charter,'Bitstream Charter',Georgia,serif;
+  font-size:17px; line-height:1.62; -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+.ui{font-family:'vln-ui','Nimbus Sans Narrow','Liberation Sans Narrow','Helvetica Neue',Arial,sans-serif}
+code,kbd,pre,.mono{font-family:'vln-mono','DejaVu Sans Mono',ui-monospace,Menlo,monospace}
+a{color:var(--cool); text-underline-offset:2px; text-decoration-thickness:.5px}
+a:hover{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:2px}
+
+.wrap{max-width:1180px; margin:0 auto; padding:0 24px}
+.prose{max-width:68ch}
+h1,h2,h3,h4{text-wrap:balance; margin:0; line-height:1.18}
+p{margin:0}
+
+/* ── eyebrow / labels ─────────────────────────────────────────────────── */
+.eyebrow{
+  font-family:'vln-ui','Nimbus Sans Narrow',Arial,sans-serif;
+  font-size:11px; font-weight:700; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--muted);
+}
+
+/* ── masthead ─────────────────────────────────────────────────────────── */
+header.mast{padding:56px 0 30px; border-bottom:1px solid var(--line)}
+.mast h1{font-size:clamp(30px,4.6vw,50px); font-weight:700; letter-spacing:-.012em; margin:14px 0 0}
+.mast .lede{font-size:19px; color:var(--ink-2); margin-top:16px; max-width:64ch}
+.mast .lede em{color:var(--ink)}
+.rail{display:flex; align-items:center; gap:10px; margin-top:26px; flex-wrap:wrap;
+  font-family:'vln-ui',Arial,sans-serif; font-size:12.5px; color:var(--muted)}
+.rail .dot{width:5px; height:5px; border-radius:50%; background:var(--line-2)}
+
+/* waypoint-graph rule: the survey as an exploration problem */
+.graph-rule{display:block; width:100%; height:26px; margin-top:34px; overflow:visible}
+.graph-rule line{stroke:var(--line-2); stroke-width:1}
+.graph-rule circle{fill:var(--surface); stroke:var(--line-2); stroke-width:1.2}
+.graph-rule circle.on{fill:var(--accent); stroke:var(--accent)}
+
+/* ── sticky nav ───────────────────────────────────────────────────────── */
+nav.sticky{
+  position:sticky; top:0; z-index:40; background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:blur(8px); border-bottom:1px solid var(--line);
+}
+nav.sticky .inner{display:flex; gap:2px; align-items:center; overflow-x:auto; padding:0 24px;
+  max-width:1180px; margin:0 auto; scrollbar-width:none}
+nav.sticky .inner::-webkit-scrollbar{display:none}
+nav.sticky a{
+  font-family:'vln-ui',Arial,sans-serif; font-size:12px; font-weight:700; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--ink-2); text-decoration:none; padding:13px 12px;
+  white-space:nowrap; border-bottom:2px solid transparent;
+}
+nav.sticky a:hover{color:var(--ink); border-bottom-color:var(--line-2)}
+
+/* ── section frame ────────────────────────────────────────────────────── */
+section{padding:60px 0; border-bottom:1px solid var(--line)}
+.sec-head{display:flex; gap:14px; align-items:baseline; margin-bottom:8px}
+.sec-node{flex:0 0 auto; width:11px; height:11px; border-radius:50%;
+  border:1.5px solid var(--line-2); background:var(--surface); transform:translateY(-2px)}
+.sec-node.on{background:var(--accent); border-color:var(--accent)}
+h2.sec{font-size:clamp(24px,3vw,32px); font-weight:700; letter-spacing:-.008em}
+.sec-sub{color:var(--ink-2); margin-top:10px; font-size:16.5px}
+
+/* ── stat tiles ───────────────────────────────────────────────────────── */
+.tiles{display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1px;
+  background:var(--line); border:1px solid var(--line); margin-top:30px}
+.tile{background:var(--surface); padding:20px 18px}
+.tile .k{font-family:'vln-ui',Arial,sans-serif; font-size:10.5px; font-weight:700;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--muted)}
+.tile .v{font-size:38px; font-weight:700; line-height:1.05; margin-top:8px;
+  font-variant-numeric:tabular-nums; letter-spacing:-.02em}
+.tile .v.am{color:var(--accent)}
+.tile .n{font-family:'vln-ui',Arial,sans-serif; font-size:12.5px; color:var(--ink-2); margin-top:6px}
+
+/* ── outline ──────────────────────────────────────────────────────────── */
+.outline{margin-top:28px; border-top:1px solid var(--line)}
+details.ol{border-bottom:1px solid var(--line)}
+details.ol > summary{
+  list-style:none; cursor:pointer; padding:15px 0 15px 0; display:grid;
+  grid-template-columns:56px 1fr auto; gap:14px; align-items:baseline;
+}
+details.ol > summary::-webkit-details-marker{display:none}
+details.ol > summary:hover .ol-t{color:var(--accent)}
+.ol-n{font-family:'vln-mono',monospace; font-size:12.5px; color:var(--muted);
+  letter-spacing:.04em; padding-top:3px}
+.ol-t{font-size:19px; font-weight:700; letter-spacing:-.005em}
+.ol-tag{font-family:'vln-ui',Arial,sans-serif; font-size:10.5px; font-weight:700;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--muted); white-space:nowrap}
+details.ol[open] > summary .ol-t{color:var(--accent)}
+.ol-body{padding:0 0 20px 70px}
+.ol-body ul{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:7px}
+.ol-body li{display:grid; grid-template-columns:44px 1fr; gap:10px; font-size:15.5px; color:var(--ink-2)}
+.ol-body li b{font-family:'vln-mono',monospace; font-size:12px; font-weight:400;
+  color:var(--muted); padding-top:3px}
+.ol-body li i{font-style:italic; color:var(--muted)}
+.ol-note{margin-top:14px; padding:12px 14px; background:var(--surface-2);
+  border-left:2px solid var(--accent-line); font-size:15px; color:var(--ink-2)}
+
+/* ── zero-shot cards ──────────────────────────────────────────────────── */
+.zs{display:grid; grid-template-columns:repeat(auto-fit,minmax(255px,1fr)); gap:1px;
+  background:var(--line); border:1px solid var(--line); margin-top:30px}
+.zs .card{background:var(--surface); padding:20px 18px; display:flex; flex-direction:column; gap:9px}
+.zs .id{font-family:'vln-mono',monospace; font-size:12px; font-weight:700; color:var(--accent-ink);
+  letter-spacing:.06em}
+.zs h4{font-size:17px; font-weight:700}
+.zs p{font-size:15px; color:var(--ink-2); line-height:1.55}
+.zs .warn{margin-top:auto; padding-top:10px; border-top:1px dashed var(--line-2);
+  font-family:'vln-ui',Arial,sans-serif; font-size:13px; color:var(--muted)}
+.zs .warn b{color:var(--accent-ink); font-weight:700}
+
+/* ── tables (documentary) ─────────────────────────────────────────────── */
+.tbl-scroll{overflow-x:auto; margin-top:26px; border:1px solid var(--line); background:var(--surface)}
+table.doc{border-collapse:collapse; width:100%; min-width:640px;
+  font-family:'vln-ui',Arial,sans-serif; font-size:14px}
+table.doc th{
+  text-align:left; padding:11px 14px; background:var(--surface-2); color:var(--muted);
+  font-size:10.5px; font-weight:700; letter-spacing:.13em; text-transform:uppercase;
+  border-bottom:1px solid var(--line); white-space:nowrap;
+}
+table.doc td{padding:12px 14px; border-bottom:1px solid var(--line); vertical-align:top;
+  color:var(--ink-2); line-height:1.5}
+table.doc tr:last-child td{border-bottom:0}
+table.doc td b{color:var(--ink); font-weight:700}
+.verdict{font-family:'vln-mono',monospace; font-size:11.5px; font-weight:700; white-space:nowrap}
+.verdict.in{color:var(--cool-ink)}
+.verdict.out{color:var(--muted)}
+.verdict.key{color:var(--accent-ink)}
+
+/* ── query blocks ─────────────────────────────────────────────────────── */
+.q{border:1px solid var(--line); background:var(--surface); margin-top:20px}
+.q-head{display:flex; align-items:center; gap:12px; padding:11px 14px; background:var(--surface-2);
+  border-bottom:1px solid var(--line); flex-wrap:wrap}
+.q-head .db{font-family:'vln-ui',Arial,sans-serif; font-size:10.5px; font-weight:700;
+  letter-spacing:.13em; text-transform:uppercase; color:var(--muted)}
+.q-head .nm{font-family:'vln-ui',Arial,sans-serif; font-size:14px; font-weight:700; color:var(--ink)}
+.q-head .sp{flex:1}
+pre.qs{margin:0; padding:16px 14px; overflow-x:auto; font-size:12.5px; line-height:1.65;
+  color:var(--ink-2); white-space:pre; tab-size:2}
+pre.qs .op{color:var(--accent-ink); font-weight:700}
+pre.qs .fn{color:var(--cool-ink)}
+.q-foot{padding:10px 14px; border-top:1px dashed var(--line); font-family:'vln-ui',Arial,sans-serif;
+  font-size:13px; color:var(--muted)}
+
+/* ── controls ─────────────────────────────────────────────────────────── */
+.btn{
+  font-family:'vln-ui',Arial,sans-serif; font-size:12px; font-weight:700; letter-spacing:.07em;
+  text-transform:uppercase; color:var(--ink-2); background:var(--surface);
+  border:1px solid var(--line-2); border-radius:var(--r); padding:6px 11px; cursor:pointer;
+  transition:background .12s, color .12s, border-color .12s;
+}
+.btn:hover{color:var(--ink); border-color:var(--ink-2); background:var(--surface-3)}
+.btn.on{background:var(--accent); border-color:var(--accent); color:var(--on-accent)}
+.btn.cool.on{background:var(--cool); border-color:var(--cool); color:var(--on-accent)}
+
+.filters{margin-top:28px; border:1px solid var(--line); background:var(--surface)}
+.frow{display:flex; gap:10px; align-items:center; flex-wrap:wrap; padding:13px 14px;
+  border-bottom:1px solid var(--line)}
+.frow:last-child{border-bottom:0}
+.frow .lbl{font-family:'vln-ui',Arial,sans-serif; font-size:10.5px; font-weight:700;
+  letter-spacing:.13em; text-transform:uppercase; color:var(--muted); flex:0 0 108px}
+input[type=text],input[type=number],select{
+  font-family:'vln-ui',Arial,sans-serif; font-size:14px; color:var(--ink);
+  background:var(--surface-2); border:1px solid var(--line-2); border-radius:var(--r);
+  padding:7px 10px;
+}
+input[type=text]{flex:1; min-width:180px}
+input[type=number]{width:88px; font-variant-numeric:tabular-nums}
+input::placeholder{color:var(--muted)}
+
+.count{font-family:'vln-ui',Arial,sans-serif; font-size:13px; color:var(--ink-2);
+  margin-left:auto; font-variant-numeric:tabular-nums}
+.count b{color:var(--accent-ink); font-weight:700}
+
+/* ── corpus table ─────────────────────────────────────────────────────── */
+.corpus{overflow-x:auto; border:1px solid var(--line); border-top:0; background:var(--surface)}
+table.cp{border-collapse:collapse; width:100%; min-width:1000px;
+  font-family:'vln-ui',Arial,sans-serif; font-size:13.5px}
+table.cp thead th{
+  position:sticky; top:0; z-index:5; background:var(--surface-2); color:var(--muted);
+  text-align:left; padding:10px 12px; font-size:10.5px; font-weight:700; letter-spacing:.12em;
+  text-transform:uppercase; border-bottom:1px solid var(--line-2); white-space:nowrap;
+}
+table.cp thead th.s{cursor:pointer; user-select:none}
+table.cp thead th.s:hover{color:var(--ink)}
+table.cp thead th .ar{opacity:.35; margin-left:4px}
+table.cp thead th[aria-sort] .ar{opacity:1; color:var(--accent-ink)}
+table.cp td{padding:10px 12px; border-bottom:1px solid var(--line); vertical-align:top;
+  color:var(--ink-2)}
+table.cp tbody tr:hover{background:var(--surface-2)}
+table.cp tbody tr.zs-row td:first-child{box-shadow:inset 3px 0 0 var(--accent)}
+.num{text-align:right; font-variant-numeric:tabular-nums; font-family:'vln-mono',monospace;
+  font-size:12.5px; white-space:nowrap}
+.work b{display:block; color:var(--ink); font-size:14.5px; font-weight:700; letter-spacing:.005em}
+.work span{display:block; color:var(--muted); font-size:12.5px; line-height:1.42; margin-top:2px;
+  max-width:44ch}
+.venue{font-size:12.5px; max-width:22ch; line-height:1.4}
+.cit{position:relative; min-width:104px}
+.cit .bar{position:absolute; left:12px; right:12px; bottom:6px; height:3px; background:var(--surface-3)}
+.cit .bar i{position:absolute; left:0; top:0; bottom:0; background:var(--bar); display:block}
+table.cp tbody tr:hover .cit .bar i{background:var(--bar-hi)}
+.cit .n{display:block; text-align:right; font-family:'vln-mono',monospace; font-size:14px;
+  color:var(--ink); font-variant-numeric:tabular-nums; padding-bottom:5px}
+.cit .src{position:absolute; left:12px; bottom:11px; font-size:9px; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--muted); font-family:'vln-ui',Arial,sans-serif}
+
+.chip{display:inline-flex; align-items:center; gap:5px; font-family:'vln-ui',Arial,sans-serif;
+  font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+  padding:3px 7px; border-radius:2px; white-space:nowrap; border:1px solid transparent}
+.chip.zero{background:var(--accent-soft); color:var(--accent-ink); border-color:var(--accent-line)}
+.chip.few{background:transparent; color:var(--accent-ink); border-color:var(--accent-line);
+  border-style:dashed}
+.chip.pre{background:var(--cool-soft); color:var(--cool-ink); border-color:var(--cool-line)}
+.chip.sup{background:transparent; color:var(--cool-ink); border-color:var(--cool-line);
+  border-style:dashed}
+.chip.bench{background:var(--surface-3); color:var(--muted); border-color:var(--line-2)}
+.zst{font-family:'vln-mono',monospace; font-size:11px; color:var(--muted); white-space:nowrap;
+  letter-spacing:.02em}
+.zst b{color:var(--accent-ink); font-weight:400}
+.lk{font-family:'vln-mono',monospace; font-size:11.5px; white-space:nowrap}
+.lk a{margin-right:8px; text-decoration:none; border-bottom:1px solid currentColor; opacity:.85}
+.lk a:hover{opacity:1}
+tr.det td{background:var(--surface-2); border-bottom:1px solid var(--line-2)}
+.det-in{display:grid; grid-template-columns:minmax(0,1.7fr) minmax(0,1fr); gap:24px; padding:4px 0 8px}
+.det-in .ab{font-family:'vln-serif',Georgia,serif; font-size:15px; color:var(--ink-2); line-height:1.55}
+.det-in dl{margin:0; display:grid; grid-template-columns:auto 1fr; gap:5px 14px;
+  font-family:'vln-ui',Arial,sans-serif; font-size:12.5px; align-content:start}
+.det-in dt{color:var(--muted); text-transform:uppercase; letter-spacing:.1em; font-size:10px;
+  font-weight:700; padding-top:2px}
+.det-in dd{margin:0; color:var(--ink-2); word-break:break-word}
+.empty{padding:44px 20px; text-align:center; color:var(--muted);
+  font-family:'vln-ui',Arial,sans-serif; font-size:14px}
+
+/* ── pipeline ─────────────────────────────────────────────────────────── */
+.pipe{display:flex; flex-direction:column; gap:0; margin-top:28px; border:1px solid var(--line);
+  background:var(--surface)}
+.step{display:grid; grid-template-columns:132px 1fr; gap:18px; padding:15px 16px;
+  border-bottom:1px solid var(--line); align-items:baseline}
+.step:last-child{border-bottom:0}
+.step .s-k{font-family:'vln-ui',Arial,sans-serif; font-size:10.5px; font-weight:700;
+  letter-spacing:.13em; text-transform:uppercase; color:var(--muted)}
+.step .s-v{font-size:15.5px; color:var(--ink-2)}
+.step.last{background:var(--surface-2)}
+.step.last .s-k{color:var(--accent-ink)}
+.crit{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:26px; margin-top:28px}
+.crit h4{font-family:'vln-ui',Arial,sans-serif; font-size:11px; font-weight:700;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-bottom:12px}
+.crit ol{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:8px}
+.crit li{display:grid; grid-template-columns:40px 1fr; gap:10px; font-size:15px; color:var(--ink-2)}
+.crit li b{font-family:'vln-mono',monospace; font-size:11.5px; font-weight:400; padding-top:3px}
+.crit .inc li b{color:var(--cool-ink)}
+.crit .exc li b{color:var(--muted)}
+
+footer{padding:44px 0 64px; color:var(--muted); font-family:'vln-ui',Arial,sans-serif; font-size:13px}
+footer p{max-width:74ch; line-height:1.62}
+footer a{color:var(--ink-2)}
+.prov{margin-top:16px; padding:14px 16px; border:1px dashed var(--line-2); background:var(--surface)}
+
+@media (prefers-reduced-motion:reduce){*{transition:none !important; animation:none !important}}
+@media (max-width:720px){
+  body{font-size:16px}
+  .wrap{padding:0 16px}
+  nav.sticky .inner{padding:0 16px}
+  .ol-body{padding-left:0}
+  details.ol > summary{grid-template-columns:44px 1fr; }
+  details.ol > summary .ol-tag{display:none}
+  .det-in{grid-template-columns:1fr}
+  .frow .lbl{flex:0 0 100%}
+}
+</style>
+
+<header class="mast">
+  <div class="wrap">
+    <div class="eyebrow">Literature survey &middot; planning workspace</div>
+    <h1>Vision-and-Language Navigation in the Era of Foundation Models</h1>
+    <p class="lede">A survey outline, a reproducible search protocol, and a seed corpus for the
+      2023&ndash;2026 window &mdash; built around one question the field keeps answering
+      inconsistently: <em>what does &ldquo;zero-shot&rdquo; actually mean when an agent
+      navigates?</em></p>
+    <div class="rail">
+      <span id="r-n"></span><span class="dot"></span>
+      <span id="r-cit"></span><span class="dot"></span>
+      <span>5 databases &middot; PRISMA-style screening</span><span class="dot"></span>
+      <span>Target format: IEEE</span>
+    </div>
+    <svg class="graph-rule" viewBox="0 0 1000 26" preserveAspectRatio="none" aria-hidden="true">
+      <line x1="0" y1="13" x2="1000" y2="13"/>
+      <circle cx="6" cy="13" r="4"/><circle cx="150" cy="13" r="4"/><circle cx="322" cy="13" r="4"/>
+      <circle cx="470" cy="13" r="4"/><circle cx="628" cy="13" r="4"/><circle cx="790" cy="13" r="4"/>
+      <circle class="on" cx="962" cy="13" r="5"/>
+    </svg>
+  </div>
+</header>
+
+<nav class="sticky">
+  <div class="inner">
+    <a href="#glance">At a glance</a>
+    <a href="#outline">Outline</a>
+    <a href="#zeroshot">Zero-shot</a>
+    <a href="#databases">Databases</a>
+    <a href="#queries">Queries</a>
+    <a href="#corpus">Seed corpus</a>
+    <a href="#screening">Screening</a>
+  </div>
+</nav>
+
+<section id="glance">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-node on"></span><h2 class="sec">At a glance</h2></div>
+    <p class="sec-sub prose">The seed corpus below is not the survey corpus &mdash; it is the
+      validation set for the search strings. If a query fails to retrieve these works, the query is
+      too narrow and gets widened before the real screening starts.</p>
+    <div class="tiles" id="tiles"></div>
+  </div>
+</section>
+
+<section id="outline">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-node"></span><h2 class="sec">Survey outline</h2></div>
+    <p class="sec-sub prose">Fourteen sections. The primary axis is the <b>method paradigm</b>; the
+      pipeline (perception &rarr; grounding &rarr; planning &rarr; control) is a fixed subsection
+      template <i>inside</i> each paradigm, and the task setting lives only in tables. Supervision
+      level is an orthogonal overlay, not a fourth branch &mdash; that is what lets Section IX exist
+      without duplicating the taxonomy.</p>
+    <div class="outline" id="outline-list"></div>
+  </div>
+</section>
+
+<section id="zeroshot">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-node on"></span><h2 class="sec">What &ldquo;zero-shot&rdquo; means &mdash; five different claims</h2></div>
+    <p class="sec-sub prose">The term carries at least five distinct meanings in this literature, and
+      papers routinely compare results across them. Auditing which claim each paper actually makes
+      &mdash; and what its components were nonetheless trained on &mdash; is the original
+      contribution of Section IX.</p>
+    <div class="zs">
+      <div class="card"><span class="id">ZS-1</span><h4>Task-level / training-free</h4>
+        <p>No training on any VLN dataset. An off-the-shelf LLM or VLM is prompted at inference
+          time. The strongest claim, and the rarest one that survives inspection.</p>
+        <div class="warn"><b>Audit:</b> almost every &ldquo;training-free&rdquo; agent still leans on
+          a waypoint predictor, an open-vocabulary detector, or CLIP weights.</div></div>
+      <div class="card"><span class="id">ZS-2</span><h4>Open-vocabulary goal</h4>
+        <p>The agent handles object or goal categories never seen during training. This is what
+          zero-shot ObjectNav almost always means.</p>
+        <div class="warn"><b>Audit:</b> &ldquo;unseen category&rdquo; is relative to the navigation
+          policy, not to the vision backbone that has seen the web.</div></div>
+      <div class="card"><span class="id">ZS-3</span><h4>Cross-dataset transfer</h4>
+        <p>Trained on one benchmark, evaluated on another with no fine-tuning &mdash; R2R&nbsp;&rarr;
+          REVERIE, or discrete&nbsp;&rarr; continuous.</p>
+        <div class="warn"><b>Audit:</b> check whether the source and target share the same
+          underlying scene dataset (both on Matterport3D is a weak transfer claim).</div></div>
+      <div class="card"><span class="id">ZS-4</span><h4>Unseen environment</h4>
+        <p>New scenes, same task and same instruction distribution.</p>
+        <div class="warn"><b>Audit:</b> the standard <code>val-unseen</code> split is
+          <b>not</b> zero-shot. Several papers present it as though it were.</div></div>
+      <div class="card"><span class="id">ZS-5</span><h4>Cross-embodiment / sim-to-real</h4>
+        <p>The policy is applied to a robot, morphology or sensor suite it was never trained on.</p>
+        <div class="warn"><b>Audit:</b> often the honest reason a real-robot demo is zero-shot is
+          that no real-world training data exists.</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="databases">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-node"></span><h2 class="sec">Databases &mdash; and what to leave out</h2></div>
+    <p class="sec-sub prose">The decisive coverage fact: <b>Scopus and Web of Science do not index
+      NeurIPS, ICLR, ICML or CoRL</b> (PMLR and OpenReview are outside both). For a 2023&ndash;2026
+      foundation-model topic, omitting arXiv and OpenReview does not make the review conservative
+      &mdash; it makes it incomplete.</p>
+    <div class="tbl-scroll">
+      <table class="doc">
+        <thead><tr><th>Source</th><th>Tier</th><th>Why it earns a slot</th><th>Caveat</th><th>Verdict</th></tr></thead>
+        <tbody>
+          <tr><td><b>Scopus</b></td><td>1</td><td>Broadest single index: IEEE, ACM, Springer (ECCV), Elsevier. Best advanced-search syntax and export.</td><td>Misses PMLR / OpenReview venues entirely.</td><td class="verdict in">PRIMARY</td></tr>
+          <tr><td><b>Web of Science Core</b></td><td>1</td><td>CPCI-S indexes CVPR / ICCV / ICRA / IROS; required for citation-based bibliometrics (VOSviewer).</td><td>Narrower than Scopus; confirm CPCI-S is in your subscription.</td><td class="verdict in">PRIMARY</td></tr>
+          <tr><td><b>IEEE Xplore</b></td><td>1</td><td>Full text of the densest venues for this topic: CVPR, ICCV, WACV, ICRA, IROS, RA-L, T-RO.</td><td>Heavy overlap with Scopus; long boolean strings fail.</td><td class="verdict in">PRIMARY</td></tr>
+          <tr><td><b>arXiv</b> <span class="mono">cs.CV cs.RO cs.AI cs.CL</span></td><td>2</td><td>Most 2025&ndash;2026 work appears here first. Excluding it makes the survey stale on arrival.</td><td>Not peer reviewed &mdash; needs an explicit preprint rule.</td><td class="verdict key">MANDATORY</td></tr>
+          <tr><td><b>OpenReview + PMLR</b></td><td>2</td><td>NeurIPS, ICLR, ICML and <b>CoRL</b> &mdash; the venues Tier 1 cannot see. CoRL is central to embodied navigation.</td><td>Manual sweep; no bulk export.</td><td class="verdict key">MANDATORY</td></tr>
+          <tr><td><b>ACM Digital Library</b></td><td>3</td><td>Some HRI, ACM MM and AR-wayfinding work.</td><td>Keep unique hits only.</td><td class="verdict in">SECONDARY</td></tr>
+          <tr><td><b>Google Scholar</b></td><td>3</td><td>Forward citation chasing; finding the published version of a preprint.</td><td>Shallow boolean support, no reproducible export.</td><td class="verdict out">SNOWBALL ONLY</td></tr>
+          <tr><td><b>ScienceDirect</b></td><td>&mdash;</td><td>Nothing Scopus does not already return.</td><td>A strict subset of Scopus; running it only inflates duplicates.</td><td class="verdict out">SKIP</td></tr>
+          <tr><td><b>PubMed</b></td><td>&mdash;</td><td>No robotics VLN coverage at all.</td><td>Single exception: one narrow query if the assistive-navigation application thread is kept.</td><td class="verdict out">DROP</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="queries">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-node on"></span><h2 class="sec">Query strings</h2></div>
+    <p class="sec-sub prose">Window: <b>2023-01-01 &rarr; 2026-09-30</b>, justified in text by the
+      post-GPT-4 shift to foundation-model agents. Pre-2023 work is cited as background but is
+      excluded from the corpus and from every PRISMA count &mdash; state that explicitly.</p>
+    <div id="queries-list"></div>
+  </div>
+</section>
+
+<section id="corpus">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-node on"></span><h2 class="sec">Seed corpus</h2></div>
+    <p class="sec-sub prose">Thirty-five works, resolved against OpenAlex for venue and identifiers,
+      then re-counted against Semantic Scholar, which indexes CV and robotics proceedings properly.
+      Sort by citations, filter by supervision level or zero-shot claim, and export whatever survives.
+      <b>Click any row</b> for its abstract and identifiers.</p>
+
+    <div class="filters">
+      <div class="frow">
+        <span class="lbl">Presets</span>
+        <button class="btn" data-preset="zs">Zero-shot only</button>
+        <button class="btn" data-preset="zs1">Training-free (ZS-1)</button>
+        <button class="btn" data-preset="ov">Open-vocabulary (ZS-2)</button>
+        <button class="btn" data-preset="recent">In window (2023+)</button>
+        <button class="btn" data-preset="bench">Datasets &amp; benchmarks</button>
+        <button class="btn" data-preset="top">Top 10 cited</button>
+        <button class="btn" data-preset="reset">Reset</button>
+      </div>
+      <div class="frow">
+        <span class="lbl">Search</span>
+        <input type="text" id="f-q" placeholder="title, author, venue, short name&hellip;" aria-label="Search the corpus">
+        <button class="btn" id="f-csv">Export CSV</button>
+      </div>
+      <div class="frow">
+        <span class="lbl">Supervision</span>
+        <span id="f-sup"></span>
+      </div>
+      <div class="frow">
+        <span class="lbl">Zero-shot claim</span>
+        <span id="f-zs"></span>
+      </div>
+      <div class="frow">
+        <span class="lbl">Role in survey</span>
+        <span id="f-grp"></span>
+      </div>
+      <div class="frow">
+        <span class="lbl">Range</span>
+        <label class="ui" style="font-size:13px;color:var(--muted)">year
+          <input type="number" id="f-y0" placeholder="from" aria-label="Year from"></label>
+        <label class="ui" style="font-size:13px;color:var(--muted)">&ndash;
+          <input type="number" id="f-y1" placeholder="to" aria-label="Year to"></label>
+        <label class="ui" style="font-size:13px;color:var(--muted)">min citations
+          <input type="number" id="f-c" placeholder="0" aria-label="Minimum citations"></label>
+        <span class="count" id="f-count"></span>
+      </div>
+    </div>
+
+    <div class="corpus">
+      <table class="cp">
+        <thead><tr>
+          <th class="s" data-k="short">Work<span class="ar">&#9662;</span></th>
+          <th class="s" data-k="year">Year<span class="ar">&#9662;</span></th>
+          <th>Venue</th>
+          <th class="s" data-k="supervision">Supervision<span class="ar">&#9662;</span></th>
+          <th>ZS claim</th>
+          <th>Task</th>
+          <th>&sect;</th>
+          <th class="s" data-k="citations_primary">Citations<span class="ar">&#9662;</span></th>
+          <th class="s" data-k="cpy">/yr<span class="ar">&#9662;</span></th>
+          <th>Links</th>
+        </tr></thead>
+        <tbody id="cp-body"></tbody>
+      </table>
+      <div class="empty" id="cp-empty" hidden>Nothing matches these filters.</div>
+    </div>
+  </div>
+</section>
+
+<section id="screening">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-node"></span><h2 class="sec">Screening &amp; criteria</h2></div>
+    <p class="sec-sub prose">Record the number at every arrow &mdash; those numbers are the PRISMA
+      figure. Single-author screening is a validity threat: re-screen a random 10&nbsp;% sample after
+      a week and report intra-rater agreement.</p>
+    <div class="pipe">
+      <div class="step"><span class="s-k">Identification</span><span class="s-v">Raw hits per database, reported separately &mdash; <span class="mono">N&#8321;</span></span></div>
+      <div class="step"><span class="s-k">Deduplication</span><span class="s-v">Zotero duplicate detection plus DOI and title normalisation; arXiv entries collapsed onto their published version</span></div>
+      <div class="step"><span class="s-k">Screening</span><span class="s-v">Title and abstract, each exclusion carrying a reason code &mdash; <span class="mono">N&#8322;</span></span></div>
+      <div class="step"><span class="s-k">Eligibility</span><span class="s-v">Full-text assessment with reason codes &mdash; <span class="mono">N&#8323;</span></span></div>
+      <div class="step"><span class="s-k">Snowballing</span><span class="s-v">Backward through reference lists, forward through Semantic Scholar &ldquo;cited by&rdquo; &mdash; <span class="mono">+N&#8324;</span></span></div>
+      <div class="step last"><span class="s-k">Included</span><span class="s-v">Expect roughly <b>120&ndash;200</b> papers &mdash; the right size for a 25&ndash;35 page IEEE survey</span></div>
+    </div>
+    <div class="crit">
+      <div class="inc">
+        <h4>Inclusion</h4>
+        <ol>
+          <li><b>IC1</b>Published 2023-01-01 &ndash; 2026-09-30</li>
+          <li><b>IC2</b>Peer reviewed, or a preprint meeting the rule below</li>
+          <li><b>IC3</b>English, full text obtainable</li>
+          <li><b>IC4</b>Agent navigates a 3D environment from <b>visual</b> observations</li>
+          <li><b>IC5</b>Behaviour is conditioned on <b>natural language</b> &mdash; instruction, goal description, dialogue, or an open-vocabulary object name</li>
+          <li><b>IC6</b>Contributes a method, dataset, system or empirical study</li>
+        </ol>
+      </div>
+      <div class="exc">
+        <h4>Exclusion</h4>
+        <ol>
+          <li><b>EC1</b>Language-free navigation (PointNav, pure geometric SLAM)</li>
+          <li><b>EC2</b>Vision-free &ldquo;navigation&rdquo; (text-only graph agents)</li>
+          <li><b>EC3</b>Manipulation-only VLA work</li>
+          <li><b>EC4</b>Non-embodied vision-language work</li>
+          <li><b>EC5</b>Autonomous driving &mdash; decide once, state it explicitly</li>
+          <li><b>EC6</b>Surveys (collected separately for Table I)</li>
+          <li><b>EC7</b>Abstracts under 4 pages, posters, unevaluated reports</li>
+          <li><b>EC8</b>Duplicate versions &mdash; keep the most complete</li>
+        </ol>
+      </div>
+    </div>
+    <div class="ol-note prose" style="margin-top:26px">
+      <b>Preprint rule</b> &mdash; write this verbatim into Section III, because reviewers will ask.
+      An arXiv-only paper is included if it meets IC4&ndash;IC6 <i>and</i> at least one of:
+      (a) &ge;&nbsp;10 citations on Semantic Scholar, (b) it introduces a benchmark already used by
+      other included papers, or (c) it reports state of the art on a standard benchmark. Every such
+      entry is marked &ldquo;preprint&rdquo; in the master table.
+    </div>
+    <div class="ol-note prose" style="margin-top:14px">
+      <b>Zero-shot boundary</b> &mdash; zero-shot ObjectNav papers are <i>included</i>: an
+      open-vocabulary object category is language conditioning under IC5, and excluding them would
+      gut Section IX. Tag them <span class="mono">task=ObjectNav</span> so their success rates are
+      never averaged with R2R success rates.
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><b>How this page was built.</b> Seed works were resolved against the OpenAlex API for venue,
+      DOI and open-access status, then re-counted through the Semantic Scholar batch endpoint.
+      Both steps are scripted and repeatable.</p>
+    <div class="prov" id="prov"></div>
+  </div>
+</footer>
+
+<script>
+const DATA = /*DATA*/;
+const ROWS = DATA.rows, META = DATA.meta;
+const NOW = 2026 + 8/12;
+
+/* ── derived fields ─────────────────────────────────────────────────── */
+ROWS.forEach(r=>{
+  r.cit = (r.citations_primary===null||r.citations_primary===undefined) ? null : r.citations_primary;
+  r.cpy = (r.cit!==null && r.year) ? r.cit/Math.max(0.5, NOW-r.year) : null;
+  r.zsList = (r.zs_claim && r.zs_claim!=='-') ? r.zs_claim.split(',').map(s=>s.trim()) : [];
+  r.hay = [r.short,r.title,r.authors,r.venue,r.s2_venue,r.task,r.supervision,r.zs_claim]
+            .filter(Boolean).join(' ').toLowerCase();
+});
+const MAXCIT = Math.max(...ROWS.map(r=>r.cit||0));
+
+const SUPS  = ['zero-shot','few-shot','pretrain-finetune','supervised','benchmark'];
+const SUPCLS= {'zero-shot':'zero','few-shot':'few','pretrain-finetune':'pre','supervised':'sup','benchmark':'bench'};
+const SUPSHORT={'zero-shot':'zero-shot','few-shot':'few-shot','pretrain-finetune':'pretrain+ft','supervised':'supervised','benchmark':'benchmark'};
+const SUPRANK= {'zero-shot':0,'few-shot':1,'pretrain-finetune':2,'supervised':3,'benchmark':4};
+const ZSIDS = ['ZS-1','ZS-2','ZS-3','ZS-4','ZS-5'];
+const GROUPS= {A:'LLM-as-planner',B:'Zero-shot ObjectNav',C:'Open-vocab maps',D:'Composition / code',E:'Trained contrast set',F:'Benchmarks'};
+
+/* ── outline ────────────────────────────────────────────────────────── */
+const OUTLINE=[
+ ['I','Introduction','framing',[
+  ['1.1','Language as the interface to mobile robots'],
+  ['1.2','Why now: the post-2023 shift from task-specific models to foundation-model agents'],
+  ['1.3','Scope: camera-based navigation driven by natural language'],
+  ['1.4','Comparison with prior VLN surveys &mdash; the gap this one fills <i>(Table I)</i>'],
+  ['1.5','Contributions, including a unified definition and audit of &ldquo;zero-shot&rdquo;'],
+  ['1.6','Organisation <i>(Fig. 1)</i>']]],
+ ['II','Background and problem formulation','background',[
+  ['2.1','POMDP formulation with an instruction conditioning variable'],
+  ['2.2','Observation space: monocular, panoramic, RGB-D, multi-camera'],
+  ['2.3','Action space: discrete graph, continuous waypoint, low-level control'],
+  ['2.4','The task family and how its members differ formally'],
+  ['2.5','Generalisation settings &mdash; forward reference to Section IX'],
+  ['2.6','Terminology and abbreviations']]],
+ ['III','Review methodology','protocol',[
+  ['3.1','Research questions RQ1&ndash;RQ6'],
+  ['3.2','Databases and rationale'],
+  ['3.3','Search strings per database'],
+  ['3.4','Inclusion and exclusion criteria'],
+  ['3.5','Screening pipeline and PRISMA flow <i>(Fig. 2)</i>'],
+  ['3.6','Backward and forward snowballing'],
+  ['3.7','Research landscape, including &ldquo;zero-shot&rdquo; term frequency over time <i>(Figs. 3&ndash;5)</i>'],
+  ['3.8','Threats to validity']]],
+ ['IV','Taxonomy','figure',[
+  ['&mdash;','One full-page tree <i>(Fig. 6)</i>, with the criterion that separates each pair of siblings stated in prose'],
+  ['&mdash;','Supervision level drawn as a shading overlay, never as a branch']]],
+ ['V','Environments, datasets and simulators','corpus',[
+  ['5.1','Photorealistic scene datasets: Matterport3D, HM3D, ScanNet, Gibson'],
+  ['5.2','Simulators: Habitat, AI2-THOR/ProcTHOR, Isaac Sim, Gazebo, aerial'],
+  ['5.3','Instruction corpora: human, template, LLM-synthesised'],
+  ['5.4','Scale, realism and licence comparison <i>(Table II)</i>'],
+  ['5.5','Augmentation and synthetic environment generation'],
+  ['5.6','Benchmarks that specifically target generalisation']]],
+ ['VI','Visual perception and scene representation','pipeline',[
+  ['6.1','Frame encoders: CNN &rarr; ViT &rarr; CLIP / SigLIP / DINOv2'],
+  ['6.2','Panoramic versus monocular, and the field-of-view trade-off'],
+  ['6.3','Depth, point clouds, geometry-aware features'],
+  ['6.4','Maps: occupancy, semantic, BEV, topological, 3D scene graphs, neural fields'],
+  ['6.5','<b>Open-vocabulary, language-queryable maps</b> &mdash; the structural enabler of zero-shot navigation'],
+  ['6.6','Memory: episodic buffers, history tokens, map-as-memory']]],
+ ['VII','Language understanding and grounding','pipeline',[
+  ['7.1','Instruction decomposition into sub-goals and landmark&ndash;action pairs'],
+  ['7.2','Cross-modal attention and alignment objectives'],
+  ['7.3','Open-vocabulary grounding'],
+  ['7.4','Spatial and relational language'],
+  ['7.5','Dialogue, clarification, ambiguity']]],
+ ['VIII','Learned navigation policies','paradigms',[
+  ['8.1','Pre-foundation baselines &mdash; brief, for continuity'],
+  ['8.2','Vision-language pretraining agents (VLN-BERT, HAMT, DUET)'],
+  ['8.3','MLLM / VLM fine-tuned as policy; VLA models transferred to navigation'],
+  ['8.4','Hierarchical and modular learned systems'],
+  ['8.5','LLM-augmented <i>training</i>: instruction synthesis, reward shaping, distillation'],
+  ['8.6','Uncertainty, backtracking, replanning, error recovery'],
+  ['8.7','Comparative summary <i>(Table III)</i>']]],
+ ['IX','Zero-shot and training-free navigation','the focus',[
+  ['9.1','<b>What &ldquo;zero-shot&rdquo; means &mdash; ZS-1 to ZS-5, and the claim audit <i>(Table VI)</i></b>'],
+  ['9.2','Training-free LLM-as-planner agents and how they verbalise a panorama'],
+  ['9.3','Open-vocabulary perception as the enabler'],
+  ['9.4','Frontier exploration plus foundation-model scoring &mdash; the standard ObjectNav recipe'],
+  ['9.5','Prompting and reasoning: chain-of-thought, ReAct loops, multi-expert, map-guided'],
+  ['9.6','Code-as-policy and tool use'],
+  ['9.7','The middle ground: few-shot, retrieval, test-time adaptation &mdash; and distillation back into small policies'],
+  ['9.8','Open-weight versus closed-model agents, and the reproducibility problem'],
+  ['9.9','Zero-shot versus supervised SOTA, with cost and latency <i>(Table VII)</i>'],
+  ['9.10','Failure modes: hallucinated landmarks, the captioning bottleneck, weak spatial reasoning, single-seed reporting']]],
+ ['X','Evaluation','measurement',[
+  ['10.1','Metrics: SR, OSR, SPL, NE, TL, nDTW, SDTW, CLS, RGS &mdash; and their pitfalls'],
+  ['10.2','Leaderboards per benchmark'],
+  ['10.3','Cross-paper comparability problems'],
+  ['10.4','The human gap, and what closed since 2023'],
+  ['10.5','Beyond success rate: efficiency, latency, energy, safety, faithfulness'],
+  ['10.6','<b>What a fair zero-shot versus supervised protocol would look like</b> &mdash; the survey&rsquo;s one normative recommendation']]],
+ ['XI','From simulation to the real world','deployment',[
+  ['11.1','Sources of the sim-to-real gap'],
+  ['11.2','Embodiments: wheeled, quadruped, humanoid, UAV'],
+  ['11.3','Onboard compute, quantisation, latency budgets'],
+  ['11.4','Reported deployments &mdash; and why so many of them are zero-shot by necessity'],
+  ['11.5','Safety, human-aware and social navigation']]],
+ ['XII','Applications','applications',[
+  ['&mdash;','Assistive navigation for visually impaired users, service and domestic robots, warehouse and inspection, search and rescue, aerial delivery, AR wayfinding']]],
+ ['XIII','Open challenges and future directions','synthesis',[
+  ['&mdash;','Closing the zero-shot gap without losing open-vocabulary generality'],
+  ['&mdash;','The perception bottleneck of text-mediated pipelines'],
+  ['&mdash;','Spatial reasoning limits of current MLLMs'],
+  ['&mdash;','Reproducibility of closed-model agents'],
+  ['&mdash;','Latency and onboard deployment'],
+  ['&mdash;','Long-horizon and lifelong navigation; synthetic-data collapse'],
+  ['&mdash;','Unified benchmarks and a standard real-robot protocol'],
+  ['&mdash;','Generalist embodied models versus specialised navigation policies']]],
+ ['XIV','Conclusion','close',[['&mdash;','Written second to last; the introduction is written last, so it promises only what the paper delivers']]]
+];
+
+/* ── query strings ──────────────────────────────────────────────────── */
+const QUERIES=[
+ ['Scopus','Q1 &mdash; core, high precision',
+  'TITLE-ABS-KEY ( "vision-and-language navigation" OR "vision language navigation"\n    OR "vision-language navigation" OR "language-guided navigation"\n    OR "language-driven navigation" OR "language-conditioned navigation"\n    OR "instruction-following navigation" OR "natural language navigation"\n    OR "text-guided navigation" )\nAND PUBYEAR > 2022\nAND ( LIMIT-TO ( LANGUAGE , "English" ) )',
+  'Never search the bare acronym VLN &mdash; it collides with unrelated terms. Pair it with a navigation word or restrict it to the keyword field.'],
+ ['Scopus','Q3 &mdash; foundation-model axis',
+  'TITLE-ABS-KEY ( ( "large language model*" OR LLM OR "foundation model*"\n        OR "vision-language model*" OR VLM OR "multimodal large language model*"\n        OR MLLM OR "GPT-4*" OR "vision-language-action" )\n  AND ( navigat* OR wayfinding OR "path planning" )\n  AND ( robot* OR embodied OR "mobile agent*" OR UAV OR drone OR quadruped ) )\nAND PUBYEAR > 2022\nAND ( LIMIT-TO ( LANGUAGE , "English" ) )',
+  'Feeds Sections VIII and IX. Expect heavy overlap with Q1 &mdash; that is fine, dedup handles it.'],
+ ['Scopus','Q5 &mdash; zero-shot / training-free axis',
+  'TITLE-ABS-KEY ( ( "zero-shot" OR "zero shot" OR "training-free" OR "training free"\n        OR "open-vocabulary" OR "open vocabulary" OR "open-set" OR "open-world"\n        OR "off-the-shelf" OR "without fine-tuning" OR "in-context learning" )\n  AND ( navigat* OR wayfinding OR "object goal navigation" OR ObjectNav OR exploration )\n  AND ( robot* OR embodied OR agent* )\n  AND ( visual OR vision OR camera OR RGB* OR semantic OR "language" ) )\nAND PUBYEAR > 2022\nAND ( LIMIT-TO ( LANGUAGE , "English" ) )',
+  'Keep this result set tagged separately &mdash; it feeds Section IX and Tables VI&ndash;VII. Precision will be low; screen it manually and do not relax the navigation block to boost recall.'],
+ ['Web of Science','Core Collection &mdash; topic search',
+  'TS=("vision-and-language navigation" OR "vision language navigation"\n    OR "language-guided navigation" OR "language-driven navigation"\n    OR "instruction-following navigation" OR "natural language navigation")\n\nTS=(("zero-shot" OR "training-free" OR "open-vocabulary" OR "open-set")\n    AND (navigat* OR ObjectNav OR "object goal navigation")\n    AND (robot* OR embodied) AND (visual OR vision OR camera OR language))',
+  'Refine: 2023&ndash;2026 &middot; Article, Proceedings Paper, Review &middot; categories CS-AI, Robotics, CS-Information Systems, EE &middot; English. Export &ldquo;Full Record and Cited References&rdquo; for VOSviewer.'],
+ ['IEEE Xplore','Command search &mdash; split into short queries',
+  '("All Metadata":"vision-and-language navigation") OR\n("All Metadata":"vision language navigation") OR\n("All Metadata":"language-guided navigation") OR\n("All Metadata":"instruction following navigation")\n\n("Abstract":"zero-shot" OR "Abstract":"training-free" OR "Abstract":"open-vocabulary")\nAND ("Abstract":navigation)\nAND ("Abstract":robot OR "Abstract":embodied)',
+  'Xplore fails on very long boolean strings &mdash; keep each query to about ten terms. Filter: 2023&ndash;2026, Conferences + Journals + Early Access.'],
+ ['arXiv','API query &mdash; not the web form',
+  '(all:"vision-and-language navigation" OR all:"vision language navigation"\n OR all:"language-guided navigation" OR all:"instruction following navigation"\n OR (all:"large language model" AND all:navigation AND all:robot)\n OR ((all:"zero-shot" OR all:"training-free" OR all:"open-vocabulary")\n     AND all:navigation AND (all:robot OR all:embodied)))\nAND (cat:cs.CV OR cat:cs.RO OR cat:cs.AI OR cat:cs.CL)',
+  'For every hit, resolve the published version through DBLP or Semantic Scholar and keep one record per work &mdash; prefer the published version, keep the preprint only if genuinely unpublished.']
+];
+
+/* ── render: outline ────────────────────────────────────────────────── */
+document.getElementById('outline-list').innerHTML = OUTLINE.map(([n,t,tag,subs],i)=>`
+ <details class="ol"${n==='IX'?' open':''}>
+   <summary><span class="ol-n">${n}</span><span class="ol-t">${t}</span><span class="ol-tag">${tag}</span></summary>
+   <div class="ol-body"><ul>${subs.map(([k,v])=>`<li><b>${k}</b><span>${v}</span></li>`).join('')}</ul>
+   ${n==='IX'?'<div class="ol-note">Section IX is the reason the supervision level is an overlay rather than a taxonomy branch: it lets you present the zero-shot version of every paradigm in one chapter instead of duplicating the tree.</div>':''}
+   </div>
+ </details>`).join('');
+
+/* ── render: queries ────────────────────────────────────────────────── */
+const hl = s => s
+  .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+  .replace(/\b(AND|OR|NOT|LIMIT-TO|PUBYEAR)\b/g,'<span class="op">$1</span>')
+  .replace(/\b(TITLE-ABS-KEY|TS|all|cat|Abstract|All Metadata)\b(?=[:=(])/g,'<span class="fn">$1</span>');
+document.getElementById('queries-list').innerHTML = QUERIES.map(([db,nm,q,foot],i)=>`
+ <div class="q">
+   <div class="q-head"><span class="db">${db}</span><span class="nm">${nm}</span><span class="sp"></span>
+     <button class="btn" data-copy="${i}">Copy</button></div>
+   <pre class="qs">${hl(q)}</pre>
+   <div class="q-foot">${foot}</div>
+ </div>`).join('');
+document.querySelectorAll('[data-copy]').forEach(b=>b.addEventListener('click',()=>{
+  navigator.clipboard.writeText(QUERIES[+b.dataset.copy][2]).then(()=>{
+    const o=b.textContent; b.textContent='Copied'; b.classList.add('on');
+    setTimeout(()=>{b.textContent=o; b.classList.remove('on')},1200);
+  });
+}));
+
+/* ── filter state ───────────────────────────────────────────────────── */
+const S={q:'',sup:new Set(),zs:new Set(),grp:new Set(),y0:null,y1:null,minc:null,top:0,
+         sort:'citations_primary',dir:-1};
+
+function chipRow(el,items,set,cls){
+  el.innerHTML = items.map(v=>`<button class="btn ${cls||''}" data-v="${v}">${v}</button>`).join(' ');
+  el.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+    const v=b.dataset.v; set.has(v)?set.delete(v):set.add(v);
+    b.classList.toggle('on', set.has(v)); S.top=0; render();
+  }));
+}
+chipRow(document.getElementById('f-sup'), SUPS, S.sup);
+chipRow(document.getElementById('f-zs'),  ZSIDS, S.zs);
+chipRow(document.getElementById('f-grp'), Object.keys(GROUPS).map(k=>k), S.grp,'cool');
+document.querySelectorAll('#f-grp button').forEach(b=>{
+  b.title = GROUPS[b.dataset.v]; b.textContent = b.dataset.v+' · '+GROUPS[b.dataset.v];
+});
+
+const $q=document.getElementById('f-q'), $y0=document.getElementById('f-y0'),
+      $y1=document.getElementById('f-y1'), $c=document.getElementById('f-c');
+$q.addEventListener('input',()=>{S.q=$q.value.trim().toLowerCase(); S.top=0; render()});
+[[$y0,'y0'],[$y1,'y1'],[$c,'minc']].forEach(([el,k])=>
+  el.addEventListener('input',()=>{S[k]=el.value===''?null:+el.value; S.top=0; render()}));
+
+document.querySelectorAll('[data-preset]').forEach(b=>b.addEventListener('click',()=>{
+  const p=b.dataset.preset;
+  S.q='';S.sup.clear();S.zs.clear();S.grp.clear();S.y0=null;S.y1=null;S.minc=null;S.top=0;
+  if(p==='zs')    S.sup.add('zero-shot');
+  if(p==='zs1')   S.zs.add('ZS-1');
+  if(p==='ov')    S.zs.add('ZS-2');
+  if(p==='recent')S.y0=2023;
+  if(p==='bench'){S.sup.add('benchmark'); S.grp.add('F');}
+  if(p==='top')  {S.top=10; S.sort='citations_primary'; S.dir=-1;}
+  syncControls(); render();
+}));
+function syncControls(){
+  $q.value=S.q; $y0.value=S.y0??''; $y1.value=S.y1??''; $c.value=S.minc??'';
+  document.querySelectorAll('#f-sup button').forEach(b=>b.classList.toggle('on',S.sup.has(b.dataset.v)));
+  document.querySelectorAll('#f-zs button').forEach(b=>b.classList.toggle('on',S.zs.has(b.dataset.v)));
+  document.querySelectorAll('#f-grp button').forEach(b=>b.classList.toggle('on',S.grp.has(b.dataset.v)));
+}
+
+document.querySelectorAll('th.s').forEach(th=>th.addEventListener('click',()=>{
+  const k=th.dataset.k;
+  if(S.sort===k) S.dir=-S.dir; else {S.sort=k; S.dir=(k==='short')?1:-1;}
+  render();
+}));
+
+/* ── filter + sort ──────────────────────────────────────────────────── */
+function view(){
+  let out=ROWS.filter(r=>{
+    if(S.q && !r.hay.includes(S.q)) return false;
+    if(S.sup.size && !S.sup.has(r.supervision)) return false;
+    if(S.zs.size  && !r.zsList.some(z=>S.zs.has(z))) return false;
+    if(S.grp.size && !S.grp.has(r.group)) return false;
+    if(S.y0!==null && (!r.year || r.year<S.y0)) return false;
+    if(S.y1!==null && (!r.year || r.year>S.y1)) return false;
+    if(S.minc!==null && (r.cit===null || r.cit<S.minc)) return false;
+    return true;
+  });
+  const k=S.sort;
+  out.sort((a,b)=>{
+    let x,y;
+    if(k==='supervision'){x=SUPRANK[a.supervision]??9; y=SUPRANK[b.supervision]??9;}
+    else if(k==='short'){x=a.short.toLowerCase(); y=b.short.toLowerCase();}
+    else {x=a[k]; y=b[k]; if(x===null||x===undefined)x=-Infinity; if(y===null||y===undefined)y=-Infinity;}
+    return x<y?-S.dir : x>y?S.dir : 0;
+  });
+  if(S.top) out=out.slice(0,S.top);
+  return out;
+}
+
+/* ── render: table ──────────────────────────────────────────────────── */
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function links(r){
+  const a=[];
+  if(r.arxiv) a.push(`<a href="https://arxiv.org/abs/${esc(r.arxiv)}" target="_blank" rel="noopener">arXiv</a>`);
+  if(r.doi)   a.push(`<a href="https://doi.org/${esc(r.doi)}" target="_blank" rel="noopener">doi</a>`);
+  if(r.s2_url)a.push(`<a href="${esc(r.s2_url)}" target="_blank" rel="noopener">S2</a>`);
+  else if(r.openalex) a.push(`<a href="${esc(r.openalex)}" target="_blank" rel="noopener">OA</a>`);
+  return a.join('');
+}
+function render(){
+  const rows=view(), tb=document.getElementById('cp-body');
+  document.getElementById('cp-empty').hidden = rows.length>0;
+  document.querySelectorAll('th.s').forEach(th=>{
+    if(th.dataset.k===S.sort) th.setAttribute('aria-sort', S.dir>0?'ascending':'descending');
+    else th.removeAttribute('aria-sort');
+  });
+  tb.innerHTML = rows.map(r=>{
+    const w = r.cit ? Math.max(1.5, 100*r.cit/MAXCIT) : 0;
+    const ven = r.s2_venue || r.venue || '—';
+    return `<tr class="${r.supervision==='zero-shot'?'zs-row':''}" data-k="${esc(r.short)}" tabindex="0">
+      <td class="work"><b>${esc(r.short)}</b><span>${esc(r.title)}</span></td>
+      <td class="num">${r.year??'—'}</td>
+      <td class="venue">${esc(ven)}</td>
+      <td><span class="chip ${SUPCLS[r.supervision]||'bench'}">${SUPSHORT[r.supervision]||esc(r.supervision)}</span></td>
+      <td class="zst">${r.zsList.length? r.zsList.map(z=>`<b>${z}</b>`).join(' ') : '—'}</td>
+      <td class="zst">${esc(r.task)}</td>
+      <td class="zst">${esc(r.section)}</td>
+      <td class="cit"><span class="n">${r.cit===null?'—':r.cit.toLocaleString('en-US')}</span>
+        <span class="src">${r.citations_source==='Semantic Scholar'?'s2':'oa'}</span>
+        <span class="bar"><i style="width:${w}%"></i></span></td>
+      <td class="num">${r.cpy===null?'—':r.cpy.toFixed(1)}</td>
+      <td class="lk">${links(r)}</td></tr>`;
+  }).join('');
+  document.getElementById('f-count').innerHTML =
+    `<b>${rows.length}</b> of ${ROWS.length} shown &middot; ${rows.filter(r=>r.supervision==='zero-shot').length} zero-shot`;
+  tb.querySelectorAll('tr[data-k]').forEach(tr=>{
+    const open=()=>toggle(tr);
+    tr.addEventListener('click',open);
+    tr.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});
+  });
+}
+function toggle(tr){
+  const nx=tr.nextElementSibling;
+  if(nx && nx.classList.contains('det')){nx.remove(); return;}
+  document.querySelectorAll('tr.det').forEach(e=>e.remove());
+  const r=ROWS.find(x=>x.short===tr.dataset.k);
+  const d=document.createElement('tr'); d.className='det';
+  d.innerHTML=`<td colspan="10"><div class="det-in">
+    <div class="ab">${r.abstract? esc(r.abstract)+'…' : '<i>No abstract retrieved — fetch it during full-text screening.</i>'}</div>
+    <dl>
+      <dt>Authors</dt><dd>${esc(r.authors||'—')}</dd>
+      <dt>Venue</dt><dd>${esc(r.s2_venue||r.venue||'—')}</dd>
+      <dt>Role</dt><dd>${r.group} · ${GROUPS[r.group]}</dd>
+      <dt>Outline</dt><dd>§ ${esc(r.section)}</dd>
+      <dt>Citations</dt><dd>${r.cit===null?'—':r.cit.toLocaleString('en-US')} (${esc(r.citations_source)})${r.oa_citations!==null&&r.oa_citations!==undefined&&r.citations_source==='Semantic Scholar'?` · OpenAlex holds ${r.oa_citations}`:''}</dd>
+      <dt>DOI</dt><dd>${esc(r.doi||'—')}</dd>
+      <dt>arXiv</dt><dd>${esc(r.arxiv||'—')}</dd>
+      <dt>Match</dt><dd>title similarity ${r.match_score}</dd>
+    </dl></div></td>`;
+  tr.after(d);
+}
+
+/* ── CSV export ─────────────────────────────────────────────────────── */
+document.getElementById('f-csv').addEventListener('click',()=>{
+  const cols=['short','title','authors','year','venue','supervision','zs_claim','task','section',
+              'citations_primary','citations_source','cpy','doi','arxiv','group'];
+  const q=v=>`"${String(v??'').replace(/"/g,'""')}"`;
+  const body=view().map(r=>cols.map(c=>q(c==='cpy'?(r.cpy===null?'':r.cpy.toFixed(2)):
+                                          (c==='venue'?(r.s2_venue||r.venue):r[c]))).join(','));
+  const blob=new Blob([cols.join(',')+'\n'+body.join('\n')],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download='vln_seed_corpus.csv'; a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+/* ── tiles + rails ──────────────────────────────────────────────────── */
+const nZS=ROWS.filter(r=>r.supervision==='zero-shot').length;
+const totalCit=ROWS.reduce((s,r)=>s+(r.cit||0),0);
+const yrs=ROWS.map(r=>r.year).filter(Boolean).sort((a,b)=>a-b);
+const medYr=yrs[Math.floor(yrs.length/2)];
+const inWin=ROWS.filter(r=>r.year&&r.year>=2023).length;
+document.getElementById('tiles').innerHTML=`
+ <div class="tile"><div class="k">Seed works</div><div class="v">${ROWS.length}</div>
+   <div class="n">${inWin} inside the 2023+ window</div></div>
+ <div class="tile"><div class="k">Zero-shot / training-free</div><div class="v am">${nZS}</div>
+   <div class="n">${Math.round(100*nZS/ROWS.length)} % of the seed set</div></div>
+ <div class="tile"><div class="k">Citations, seed set</div><div class="v">${totalCit.toLocaleString('en-US')}</div>
+   <div class="n">${META.s2_resolved} of ${ROWS.length} counted by Semantic Scholar</div></div>
+ <div class="tile"><div class="k">Median year</div><div class="v">${medYr}</div>
+   <div class="n">Most-cited: ${ROWS.reduce((a,b)=>((b.cit||0)>(a.cit||0)?b:a)).short}</div></div>`;
+document.getElementById('r-n').textContent = `${ROWS.length} seed works · ${nZS} zero-shot`;
+document.getElementById('r-cit').textContent = `citations retrieved ${META.retrieved}`;
+document.getElementById('prov').innerHTML=
+ `<b>Provenance.</b> Citation counts: ${esc(META.citation_source)}. Retrieved ${esc(META.retrieved)};
+  all ${ROWS.length} rows resolved on Semantic Scholar, so the citation column is a single
+  comparable scale.
+  <br><br><b>Why two sources.</b> OpenAlex resolves venue, DOI and open-access status well but does
+  not index the reference lists of most CV and ML proceedings &mdash; it holds 61 citations for R2R
+  against 1,922 on Semantic Scholar, and 21 for HAMT against 409. Ranking this literature on
+  OpenAlex counts would invert the order. Each row therefore keeps its OpenAlex figure alongside
+  the Semantic Scholar one; open a row to compare them.
+  <br><br><b>Seed list status.</b> Titles were resolved automatically; every venue and year here
+  still needs manual confirmation before it becomes a citation. This is a query-validation set and
+  a snowballing starting point &mdash; not the survey corpus.`;
+
+syncControls(); render();
+</script>
