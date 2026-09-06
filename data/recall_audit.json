@@ -1,0 +1,315 @@
+{
+ "corpus": "corpus_screening.csv",
+ "seeds": 35,
+ "found": 26,
+ "recall_all": "26/35",
+ "recall_in_window": "26/26",
+ "missed_in_window": [],
+ "missed_out_of_window": [
+  {
+   "short": "CLIP-Nav",
+   "group": "A",
+   "year": 2022,
+   "title": "CLIP-Nav: Using CLIP for Zero-Shot Vision-and-Language Navigation",
+   "zs_claim": "ZS-1"
+  },
+  {
+   "short": "ZSON",
+   "group": "B",
+   "year": 2022,
+   "title": "ZSON: Zero-Shot Object-Goal Navigation using Multimodal Goal Embedding",
+   "zs_claim": "ZS-2,ZS-3"
+  },
+  {
+   "short": "LM-Nav",
+   "group": "D",
+   "year": 2022,
+   "title": "LM-Nav: Robotic Navigation with Large Pre-Trained Models of Language, ",
+   "zs_claim": "ZS-1,ZS-5"
+  },
+  {
+   "short": "SayCan",
+   "group": "D",
+   "year": 2022,
+   "title": "Do As I Can, Not As I Say: Grounding Language in Robotic Affordances",
+   "zs_claim": "ZS-1"
+  },
+  {
+   "short": "R2R",
+   "group": "E",
+   "year": 2018,
+   "title": "Vision-and-Language Navigation: Interpreting Visually-Grounded Navigat",
+   "zs_claim": "-"
+  },
+  {
+   "short": "Rec-VLN-BERT",
+   "group": "E",
+   "year": 2021,
+   "title": "VLN↻BERT: A Recurrent Vision-and-Language BERT for Navigation",
+   "zs_claim": "-"
+  },
+  {
+   "short": "HAMT",
+   "group": "E",
+   "year": 2021,
+   "title": "History Aware Multimodal Transformer for Vision-and-Language Navigatio",
+   "zs_claim": "-"
+  },
+  {
+   "short": "DUET",
+   "group": "E",
+   "year": 2022,
+   "title": "Think Global, Act Local: Dual-scale Graph Transformer for Vision-and-L",
+   "zs_claim": "-"
+  },
+  {
+   "short": "VLN-CE",
+   "group": "F",
+   "year": 2020,
+   "title": "Beyond the Nav-Graph: Vision-and-Language Navigation in Continuous Env",
+   "zs_claim": "-"
+  }
+ ],
+ "found_by_set": {
+  "core": 8,
+  "recall": 13,
+  "zeroshot": 8,
+  "enabler": 6
+ },
+ "hits": [
+  {
+   "short": "NavGPT",
+   "group": "A",
+   "year": 2024,
+   "title": "NavGPT: Explicit Reasoning in Vision-and-Language Navigation with Larg",
+   "zs_claim": "ZS-1",
+   "found_by": "core",
+   "sources": "arxiv|crossref|dblp|openalex|openreview|s2"
+  },
+  {
+   "short": "NavGPT-2",
+   "group": "A",
+   "year": 2024,
+   "title": "NavGPT-2: Unleashing Navigational Reasoning Capability for Large Visio",
+   "zs_claim": "-",
+   "found_by": "core",
+   "sources": "arxiv|openalex|s2"
+  },
+  {
+   "short": "MapGPT",
+   "group": "A",
+   "year": 2024,
+   "title": "MapGPT: Map-Guided Prompting with Adaptive Path Planning for Vision-an",
+   "zs_claim": "ZS-1",
+   "found_by": "core",
+   "sources": "arxiv|crossref|openalex|openreview|s2"
+  },
+  {
+   "short": "DiscussNav",
+   "group": "A",
+   "year": 2024,
+   "title": "Discuss Before Moving: Visual Language Navigation via Multi-expert Dis",
+   "zs_claim": "ZS-1",
+   "found_by": "recall",
+   "sources": "arxiv|crossref|dblp|openalex|openreview|s2"
+  },
+  {
+   "short": "InstructNav",
+   "group": "A",
+   "year": 2024,
+   "title": "InstructNav: Zero-shot System for Generic Instruction Navigation in Un",
+   "zs_claim": "ZS-1,ZS-3",
+   "found_by": "recall",
+   "sources": "arxiv|dblp|openalex|openreview|s2"
+  },
+  {
+   "short": "Open-Nav",
+   "group": "A",
+   "year": 2025,
+   "title": "Open-Nav: Exploring Zero-Shot Vision-and-Language Navigation in Contin",
+   "zs_claim": "ZS-1",
+   "found_by": "core",
+   "sources": "arxiv|crossref|openalex|openreview|s2"
+  },
+  {
+   "short": "March-in-Chat",
+   "group": "A",
+   "year": 2023,
+   "title": "March in Chat: Interactive Prompting for Remote Embodied Referring Exp",
+   "zs_claim": "ZS-1",
+   "found_by": "core",
+   "sources": "arxiv|openalex|openreview|s2"
+  },
+  {
+   "short": "LangNav",
+   "group": "A",
+   "year": 2024,
+   "title": "LangNav: Language as a Perceptual Representation for Navigation",
+   "zs_claim": "ZS-3",
+   "found_by": "core",
+   "sources": "arxiv|openalex|openreview|s2"
+  },
+  {
+   "short": "CoW",
+   "group": "B",
+   "year": 2023,
+   "title": "CoWs on Pasture: Baselines and Benchmarks for Language-Driven Zero-Sho",
+   "zs_claim": "ZS-1,ZS-2",
+   "found_by": "recall|zeroshot",
+   "sources": "crossref|dblp|openalex|openreview"
+  },
+  {
+   "short": "ESC",
+   "group": "B",
+   "year": 2023,
+   "title": "ESC: Exploration with Soft Commonsense Constraints for Zero-shot Objec",
+   "zs_claim": "ZS-1,ZS-2",
+   "found_by": "recall|zeroshot",
+   "sources": "arxiv|dblp|openalex|openreview|s2"
+  },
+  {
+   "short": "L3MVN",
+   "group": "B",
+   "year": 2023,
+   "title": "L3MVN: Leveraging Large Language Models for Visual Target Navigation",
+   "zs_claim": "ZS-1,ZS-2",
+   "found_by": "recall",
+   "sources": "arxiv|crossref|dblp|openalex|s2"
+  },
+  {
+   "short": "VLFM",
+   "group": "B",
+   "year": 2024,
+   "title": "VLFM: Vision-Language Frontier Maps for Zero-Shot Semantic Navigation",
+   "zs_claim": "ZS-1,ZS-2",
+   "found_by": "recall|zeroshot",
+   "sources": "arxiv|crossref|openalex|openreview|s2"
+  },
+  {
+   "short": "OpenFMNav",
+   "group": "B",
+   "year": 2024,
+   "title": "OpenFMNav: Towards Open-Set Zero-Shot Object Navigation via Vision-Lan",
+   "zs_claim": "ZS-1,ZS-2",
+   "found_by": "recall|zeroshot",
+   "sources": "arxiv|crossref|dblp|openalex|openreview|s2"
+  },
+  {
+   "short": "SG-Nav",
+   "group": "B",
+   "year": 2024,
+   "title": "SG-Nav: Online 3D Scene Graph Prompting for LLM-based Zero-shot Object",
+   "zs_claim": "ZS-1,ZS-2",
+   "found_by": "recall|zeroshot",
+   "sources": "arxiv|crossref|dblp|openalex|openreview|s2"
+  },
+  {
+   "short": "VoroNav",
+   "group": "B",
+   "year": 2024,
+   "title": "VoroNav: Voronoi-based Zero-shot Object Navigation with Large Language",
+   "zs_claim": "ZS-1,ZS-2",
+   "found_by": "recall|zeroshot",
+   "sources": "arxiv|dblp|openalex|openreview|s2"
+  },
+  {
+   "short": "VLMaps",
+   "group": "C",
+   "year": 2023,
+   "title": "Visual Language Maps for Robot Navigation",
+   "zs_claim": "ZS-2",
+   "found_by": "enabler|zeroshot",
+   "sources": "dblp|openalex|openreview"
+  },
+  {
+   "short": "NLMap",
+   "group": "C",
+   "year": 2023,
+   "title": "Open-vocabulary Queryable Scene Representations for Real World Plannin",
+   "zs_claim": "ZS-2",
+   "found_by": "enabler",
+   "sources": "crossref|dblp|openalex|openreview"
+  },
+  {
+   "short": "ConceptFusion",
+   "group": "C",
+   "year": 2023,
+   "title": "ConceptFusion: Open-set multimodal 3D mapping",
+   "zs_claim": "ZS-2",
+   "found_by": "enabler",
+   "sources": "arxiv|crossref|dblp|openalex|openreview|s2"
+  },
+  {
+   "short": "ConceptGraphs",
+   "group": "C",
+   "year": 2024,
+   "title": "ConceptGraphs: Open-Vocabulary 3D Scene Graphs for Perception and Plan",
+   "zs_claim": "ZS-2",
+   "found_by": "enabler",
+   "sources": "arxiv|crossref|dblp|openalex|s2"
+  },
+  {
+   "short": "HOV-SG",
+   "group": "C",
+   "year": 2024,
+   "title": "Hierarchical Open-Vocabulary 3D Scene Graphs for Language-Grounded Rob",
+   "zs_claim": "ZS-2",
+   "found_by": "enabler|zeroshot",
+   "sources": "arxiv|crossref|dblp|openalex|openreview|s2"
+  },
+  {
+   "short": "Code as Policies",
+   "group": "D",
+   "year": 2023,
+   "title": "Code as Policies: Language Model Programs for Embodied Control",
+   "zs_claim": "ZS-1",
+   "found_by": "enabler",
+   "sources": "crossref|dblp|openalex"
+  },
+  {
+   "short": "NaVid",
+   "group": "E",
+   "year": 2024,
+   "title": "NaVid: Video-based VLM Plans the Next Step for Vision-and-Language Nav",
+   "zs_claim": "-",
+   "found_by": "core",
+   "sources": "arxiv|crossref|dblp|openalex|openreview|s2"
+  },
+  {
+   "short": "NaVILA",
+   "group": "E",
+   "year": 2025,
+   "title": "NaVILA: Legged Robot Vision-Language-Action Model for Navigation",
+   "zs_claim": "ZS-5",
+   "found_by": "core|recall",
+   "sources": "arxiv|crossref|openalex|openreview|s2"
+  },
+  {
+   "short": "Uni-NaVid",
+   "group": "E",
+   "year": 2025,
+   "title": "Uni-NaVid: A Video-based Vision-Language-Action Model for Unifying Emb",
+   "zs_claim": "-",
+   "found_by": "recall",
+   "sources": "arxiv|crossref|openalex|openreview|s2"
+  },
+  {
+   "short": "HM3D-OVON",
+   "group": "F",
+   "year": 2024,
+   "title": "HM3D-OVON: A Dataset and Benchmark for Open-Vocabulary Object Goal Nav",
+   "zs_claim": "ZS-2",
+   "found_by": "recall",
+   "sources": "arxiv|crossref|openalex|s2"
+  },
+  {
+   "short": "GOAT-Bench",
+   "group": "F",
+   "year": 2024,
+   "title": "GOAT-Bench: A Benchmark for Multi-Modal Lifelong Navigation",
+   "zs_claim": "ZS-2",
+   "found_by": "recall",
+   "sources": "arxiv|crossref|dblp|openalex|openreview|s2"
+  }
+ ]
+}

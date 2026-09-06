@@ -1,0 +1,97 @@
+{
+ "query_sets": [
+  "core",
+  "recall",
+  "zeroshot",
+  "enabler"
+ ],
+ "window": "2023-01-01 onward",
+ "retrieved": "2026-09-06",
+ "phrases": {
+  "core": [
+   "vision-and-language navigation",
+   "vision language navigation",
+   "vision-language navigation",
+   "language-guided navigation",
+   "language guided navigation",
+   "language-driven navigation",
+   "language-conditioned navigation",
+   "instruction-following navigation",
+   "instruction following navigation",
+   "natural language navigation",
+   "text-guided navigation"
+  ],
+  "recall": [
+   "visual language navigation",
+   "visual-language navigation",
+   "object goal navigation",
+   "object-goal navigation",
+   "objectgoal navigation",
+   "object navigation",
+   "embodied navigation",
+   "instruction navigation",
+   "semantic navigation",
+   "visual target navigation",
+   "lifelong navigation",
+   "multimodal navigation",
+   "multi-modal navigation",
+   "demand-driven navigation",
+   "remote object grounding",
+   "vision-language-action model"
+  ],
+  "zeroshot": [
+   "zero-shot navigation",
+   "zero shot navigation",
+   "training-free navigation",
+   "open-vocabulary navigation",
+   "open vocabulary navigation",
+   "zero-shot object navigation",
+   "zero-shot object goal navigation",
+   "language-grounded robot navigation"
+  ],
+  "enabler": [
+   "open-vocabulary map",
+   "visual language map",
+   "open-vocabulary scene graph",
+   "open-vocabulary 3d scene graph",
+   "queryable scene representation",
+   "open-set 3d mapping",
+   "multimodal 3d mapping",
+   "code as policies",
+   "language model programs"
+  ]
+ },
+ "per_source": {
+  "openreview": 1153,
+  "crossref": 685,
+  "s2": 2704,
+  "arxiv": 1505,
+  "dblp": 580,
+  "openalex": 4617
+ },
+ "per_set": {
+  "enabler": 1059,
+  "core": 2872,
+  "recall": 6664,
+  "zeroshot": 649
+ },
+ "per_phrase": {},
+ "note": "Scopus and Web of Science require institutional credentials and are not included; export them separately and merge on DOI / normalised title.",
+ "new_records_this_run": 0,
+ "failed_requests": 6,
+ "rebuilt_from_log": true,
+ "sources_not_harvested": [
+  "ieee"
+ ],
+ "raw_records": 11244,
+ "after_dedup": 3208,
+ "duplicates_removed": 8036,
+ "multi_source": 2476,
+ "preprint_only": 1364,
+ "per_set_after_dedup": {
+  "core": 765,
+  "recall": 2100,
+  "zeroshot": 162,
+  "enabler": 435
+ }
+}

@@ -1,4 +1,5 @@
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VLN Survey — Plan &amp; Seed Corpus</title>
 <style>
 /*FONTS*/
@@ -114,6 +115,39 @@ section{padding:60px 0; border-bottom:1px solid var(--line)}
 .sec-node.on{background:var(--accent); border-color:var(--accent)}
 h2.sec{font-size:clamp(24px,3vw,32px); font-weight:700; letter-spacing:-.008em}
 .sec-sub{color:var(--ink-2); margin-top:10px; font-size:16.5px}
+ol.rd{list-style:none; margin:14px 0 0; padding:0}
+ol.rd li{background:var(--surface); border:1px solid var(--line); padding:11px 14px;
+  margin-bottom:6px; display:flex; gap:13px; align-items:baseline}
+ol.rd .rk{color:var(--muted); font-size:12px; font-variant-numeric:tabular-nums;
+  min-width:26px; flex:none; font-family:'vln-ui',Arial,sans-serif}
+ol.rd .bd{flex:1; min-width:0}
+ol.rd .tt{font-size:14.5px; line-height:1.4; margin:0 0 3px}
+ol.rd .tt a{color:var(--ink); text-decoration:none}
+ol.rd .tt a:hover{text-decoration:underline; text-underline-offset:2px}
+ol.rd .mt{font-family:'vln-ui',Arial,sans-serif; font-size:11.5px; color:var(--muted);
+  display:flex; gap:10px; flex-wrap:wrap}
+.stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1px;
+  margin-top:26px; background:var(--line); border:1px solid var(--line)}
+.stat{background:var(--surface); padding:16px 18px}
+.stat .k{font-family:'vln-ui',Arial,sans-serif; font-size:11.5px; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--ink-2); font-weight:700; margin-bottom:12px}
+.stat .row{display:flex; align-items:center; gap:9px; font-family:'vln-ui',Arial,sans-serif;
+  font-size:12.5px; margin-bottom:5px}
+.stat .row .l{flex:0 0 42%; color:var(--ink-2); overflow:hidden; text-overflow:ellipsis;
+  white-space:nowrap}
+.stat .row .b{flex:1; height:7px; background:var(--surface-3); position:relative}
+.stat .row .b i{position:absolute; left:0; top:0; bottom:0; background:var(--bar); display:block}
+.stat .row .v{flex:0 0 46px; text-align:right; font-variant-numeric:tabular-nums; color:var(--ink)}
+.stat .n{font-size:11.5px; color:var(--muted); margin-top:10px; line-height:1.45;
+  font-family:'vln-ui',Arial,sans-serif}
+.sub-note{font-family:'vln-ui',Arial,sans-serif; font-size:11.5px; color:var(--muted);
+  margin-top:3px; line-height:1.45}
+.sub-note.ab{max-width:560px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+  overflow:hidden}
+#papers .filters .btn.on{background:var(--accent-soft); color:var(--accent-ink);
+  border-color:var(--accent-line)}
+h3.sub{margin:34px 0 0; font-family:'vln-ui',Arial,sans-serif; font-size:12.5px;
+  letter-spacing:.09em; text-transform:uppercase; color:var(--ink-2); font-weight:700}
 
 /* ── stat tiles ───────────────────────────────────────────────────────── */
 .tiles{display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1px;
@@ -352,6 +386,9 @@ footer a{color:var(--ink-2)}
     <a href="#zeroshot">Zero-shot</a>
     <a href="#databases">Databases</a>
     <a href="#queries">Queries</a>
+    <a href="#harvest">Harvest</a>
+    <a href="#papers">Papers</a>
+    <a href="#read">Reading list</a>
     <a href="#corpus">Seed corpus</a>
     <a href="#screening">Screening</a>
   </div>
@@ -425,11 +462,13 @@ footer a{color:var(--ink-2)}
       <table class="doc">
         <thead><tr><th>Source</th><th>Tier</th><th>Why it earns a slot</th><th>Caveat</th><th>Verdict</th></tr></thead>
         <tbody>
-          <tr><td><b>Scopus</b></td><td>1</td><td>Broadest single index: IEEE, ACM, Springer (ECCV), Elsevier. Best advanced-search syntax and export.</td><td>Misses PMLR / OpenReview venues entirely.</td><td class="verdict in">PRIMARY</td></tr>
+          <tr><td><b>Scopus</b></td><td>1</td><td>Broadest single index: IEEE, ACM, Springer (ECCV), Elsevier. Best advanced-search syntax and export.</td><td>Misses PMLR / OpenReview venues entirely. Needs an institutional session &mdash; export it and merge with <span class="mono">tools/merge_export.py</span>.</td><td class="verdict in">PRIMARY</td></tr>
           <tr><td><b>Web of Science Core</b></td><td>1</td><td>CPCI-S indexes CVPR / ICCV / ICRA / IROS; required for citation-based bibliometrics (VOSviewer).</td><td>Narrower than Scopus; confirm CPCI-S is in your subscription.</td><td class="verdict in">PRIMARY</td></tr>
           <tr><td><b>IEEE Xplore</b></td><td>1</td><td>Full text of the densest venues for this topic: CVPR, ICCV, WACV, ICRA, IROS, RA-L, T-RO.</td><td>Heavy overlap with Scopus; long boolean strings fail.</td><td class="verdict in">PRIMARY</td></tr>
           <tr><td><b>arXiv</b> <span class="mono">cs.CV cs.RO cs.AI cs.CL</span></td><td>2</td><td>Most 2025&ndash;2026 work appears here first. Excluding it makes the survey stale on arrival.</td><td>Not peer reviewed &mdash; needs an explicit preprint rule.</td><td class="verdict key">MANDATORY</td></tr>
-          <tr><td><b>OpenReview + PMLR</b></td><td>2</td><td>NeurIPS, ICLR, ICML and <b>CoRL</b> &mdash; the venues Tier 1 cannot see. CoRL is central to embodied navigation.</td><td>Manual sweep; no bulk export.</td><td class="verdict key">MANDATORY</td></tr>
+          <tr><td><b>OpenReview + PMLR</b></td><td>2</td><td>NeurIPS, ICLR, ICML and <b>CoRL</b> &mdash; the venues Tier 1 cannot see. CoRL is central to embodied navigation.</td><td>No bulk export &mdash; but the <span class="mono">notes/search</span> API is harvestable, which is what <span class="mono">tools/harvest.py</span> does.</td><td class="verdict key">MANDATORY</td></tr>
+          <tr><td><b>Crossref</b></td><td>2</td><td>The DOI metadata IEEE, ACM, Springer and Elsevier deposit &mdash; publisher content without a login.</td><td>Fuzzy search and patchy abstracts; no controlled vocabulary, no citation graph. Not a Scopus replacement.</td><td class="verdict key">HARVESTED</td></tr>
+          <tr><td><b>DBLP</b></td><td>2</td><td>Canonical CS venue names, and the published version of work the others still list as a preprint.</td><td>Title search only, no abstracts.</td><td class="verdict key">HARVESTED</td></tr>
           <tr><td><b>ACM Digital Library</b></td><td>3</td><td>Some HRI, ACM MM and AR-wayfinding work.</td><td>Keep unique hits only.</td><td class="verdict in">SECONDARY</td></tr>
           <tr><td><b>Google Scholar</b></td><td>3</td><td>Forward citation chasing; finding the published version of a preprint.</td><td>Shallow boolean support, no reproducible export.</td><td class="verdict out">SNOWBALL ONLY</td></tr>
           <tr><td><b>ScienceDirect</b></td><td>&mdash;</td><td>Nothing Scopus does not already return.</td><td>A strict subset of Scopus; running it only inflates duplicates.</td><td class="verdict out">SKIP</td></tr>
@@ -450,13 +489,110 @@ footer a{color:var(--ink-2)}
   </div>
 </section>
 
+<section id="harvest">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-node on"></span><h2 class="sec">Harvest &amp; recall audit</h2></div>
+    <p class="sec-sub prose">The queries above are what a Scopus session runs. This is what was
+      actually executed against the four sources that answer without an institutional login, and
+      how much of the seed list came back. <b>Seed recall is the number that decides whether a
+      query set earns its place</b> &mdash; Q1 alone returned 8 of 35, which is why there are four
+      sets rather than one.</p>
+    <div class="tiles" id="hv-tiles"></div>
+    <div id="hv-body"></div>
+  </div>
+</section>
+
+<section id="papers">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-node on"></span><h2 class="sec">The harvested corpus</h2></div>
+    <p class="sec-sub prose">Every record the four query sets returned, deduplicated across
+      sources and pre-screened against the inclusion and exclusion criteria. <b>The decision
+      column is an automated pre-screen, not a screening decision</b> &mdash; a keyword gate sorts
+      the obvious cases so the human pass starts from something ordered, and §7 still requires
+      that pass. Read the <span class="mono">check</span> bucket first: those are the ones the
+      gate could not call.</p>
+
+    <div class="tiles" id="pp-tiles"></div>
+    <div id="pp-stats"></div>
+
+    <div class="filters">
+      <div class="frow">
+        <span class="lbl">Presets</span>
+        <button class="btn" data-pp="include">Included</button>
+        <button class="btn" data-pp="check">Needs a human</button>
+        <button class="btn" data-pp="zs">Zero-shot candidates</button>
+        <button class="btn" data-pp="survey">Surveys (Table&nbsp;I)</button>
+        <button class="btn" data-pp="cited">Most cited</button>
+        <button class="btn" data-pp="reset">Reset</button>
+      </div>
+      <div class="frow">
+        <span class="lbl">Search</span>
+        <input type="text" id="pp-q" placeholder="title, venue, author, DOI&hellip;" aria-label="Search the corpus">
+        <button class="btn" id="pp-csv">Export CSV</button>
+      </div>
+      <div class="frow">
+        <span class="lbl">Decision</span><span id="pp-dec"></span>
+      </div>
+      <div class="frow">
+        <span class="lbl">Query set</span><span id="pp-set"></span>
+      </div>
+      <div class="frow">
+        <span class="lbl">Source</span><span id="pp-src"></span>
+      </div>
+      <div class="frow">
+        <span class="lbl">Range</span>
+        <label class="ui" style="font-size:13px;color:var(--muted)">year
+          <input type="number" id="pp-y0" placeholder="from" aria-label="Year from"></label>
+        <label class="ui" style="font-size:13px;color:var(--muted)">&ndash;
+          <input type="number" id="pp-y1" placeholder="to" aria-label="Year to"></label>
+        <label class="ui" style="font-size:13px;color:var(--muted)">min citations
+          <input type="number" id="pp-c" placeholder="0" aria-label="Minimum citations"></label>
+        <span class="count" id="pp-count"></span>
+      </div>
+    </div>
+
+    <div class="tbl-scroll">
+      <table class="cp">
+        <thead><tr>
+          <th>Decision</th><th>Title</th><th>Year</th><th>Venue</th>
+          <th class="s" data-pk="citations">Cited<span class="ar">&#9662;</span></th>
+          <th>Sets</th><th>Sources</th>
+        </tr></thead>
+        <tbody id="pp-body"></tbody>
+      </table>
+    </div>
+    <div class="empty" id="pp-empty" hidden>Nothing matches these filters.</div>
+    <div style="margin-top:14px"><button class="btn" id="pp-more" hidden>Show more</button></div>
+  </div>
+</section>
+
+<section id="read">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-node on"></span><h2 class="sec">What to read first</h2></div>
+    <p class="sec-sub prose">A survey gets written from about a hundred papers, not from two
+      thousand. This is that hundred, drawn from the pre-screened corpus and grouped by the
+      chapter each one serves. Two choices shape it and both belong in Sec. III:
+      <b>citations are divided by age</b>, because ranking on raw counts ranks 2024 rather than
+      the field; and <b>the tier quotas are ceilings, not targets</b> &mdash; a tier that cannot
+      fill itself from peer-reviewed or cited work is left short, because that shortfall says
+      something the survey should report.</p>
+    <div class="tiles" id="rd-tiles"></div>
+    <div id="rd-body"></div>
+  </div>
+</section>
+
 <section id="corpus">
   <div class="wrap">
-    <div class="sec-head"><span class="sec-node on"></span><h2 class="sec">Seed corpus</h2></div>
-    <p class="sec-sub prose">Thirty-five works, resolved against OpenAlex for venue and identifiers,
-      then re-counted against Semantic Scholar, which indexes CV and robotics proceedings properly.
-      Sort by citations, filter by supervision level or zero-shot claim, and export whatever survives.
+    <div class="sec-head"><span class="sec-node on"></span><h2 class="sec">Seed set &mdash; the yardstick</h2></div>
+    <p class="sec-sub prose">These thirty-five works are <b>not the survey corpus</b>; the corpus is
+      the section above. They are the measuring stick: a hand-picked list of what this literature
+      obviously contains, so that any query can be graded on how much of it comes back. That grade
+      is the <span class="mono">23/26</span> on the harvest panel, and it is what forced Q1 into four
+      query sets. The list is also the snowballing entry point &mdash; forward-cite CoW, ZSON, VLFM,
+      NavGPT and VLMaps and you reach most of the zero-shot literature in two hops.
+      Resolved against OpenAlex for venue and identifiers, re-counted on Semantic Scholar.
       <b>Click any row</b> for its abstract and identifiers.</p>
+    <div id="seed-recall-note"></div>
 
     <div class="filters">
       <div class="frow">
@@ -586,6 +722,9 @@ footer a{color:var(--ink-2)}
 
 <script>
 const DATA = /*DATA*/;
+const HARVEST = /*HARVEST*/;
+const CORPUS = /*CORPUS*/;
+const READING = /*READING*/;
 const ROWS = DATA.rows, META = DATA.meta;
 const NOW = 2026 + 8/12;
 
@@ -927,6 +1066,325 @@ document.getElementById('prov').innerHTML=
   <br><br><b>Seed list status.</b> Titles were resolved automatically; every venue and year here
   still needs manual confirmation before it becomes a citation. This is a query-validation set and
   a snowballing starting point &mdash; not the survey corpus.`;
+
+/* ── render: harvest + recall audit ─────────────────────────────────── */
+(function(){
+  const R = HARVEST && HARVEST.report, A = HARVEST && HARVEST.audit;
+  const sec = document.getElementById('harvest');
+  if(!R){ sec.hidden = true; return; }
+  const num = n => (n==null ? '&mdash;' : Number(n).toLocaleString('en-US'));
+  const SETS = {
+    core:     'Q1 &mdash; the <span class="mono">&hellip;navigation</span> phrase family. High precision, and the query a Scopus session would run.',
+    recall:   'Q2/Q4 &mdash; the other names this field gives the same task: <span class="mono">visual language navigation</span>, <span class="mono">object goal navigation</span>, <span class="mono">embodied navigation</span>.',
+    zeroshot: 'Q5 &mdash; zero-shot, training-free and open-vocabulary navigation. Tagged separately because it feeds Section IX and because its precision is low.',
+    enabler:  'Open-vocabulary maps, 3D scene graphs and code-as-policy. These papers never say &ldquo;navigation&rdquo;, and Sections 6.5, 9.3 and 9.6 depend on them.'
+  };
+  const SOURCES = {
+    openalex:         ['OpenAlex', 'Phrase search over title and abstract &mdash; the closest open analogue to Scopus <span class="mono">TITLE-ABS-KEY</span>.'],
+    crossref:         ['Crossref', 'The DOI metadata IEEE, ACM, Springer and Elsevier deposit &mdash; the keyless way to reach publisher content. Fuzzy search, so every hit is re-checked for the phrase.'],
+    dblp:             ['DBLP', 'Canonical CS venue resolution. No abstracts, but it catches published versions the other sources still hold as preprints.'],
+    scopus:           ['Scopus <span class="mono">(export)</span>', 'Merged from a manual export &mdash; Scopus needs an institutional session and cannot be harvested.'],
+    wos:              ['Web of Science <span class="mono">(export)</span>', 'Merged from a manual export, same reason.'],
+    semantic_scholar: ['Semantic Scholar', 'Bulk search. The one source that indexes CV and robotics proceedings references properly.'],
+    arxiv:            ['arXiv', 'Title/abstract phrase search over cs.CV, cs.RO, cs.AI, cs.CL &mdash; the preprint stream Scopus cannot see.'],
+    openreview:       ['OpenReview', 'NeurIPS, ICLR, ICML and CoRL, on both API hosts. Papers still under review are dropped: anonymous and not peer-reviewed, so IC2 excludes them.']
+  };
+
+  const recall = A ? A.recall_in_window : null;
+  document.getElementById('hv-tiles').innerHTML = `
+   <div class="tile"><div class="k">Raw identification</div><div class="v">${num(R.raw_records)}</div>
+     <div class="n">one row per record &times; source</div></div>
+   <div class="tile"><div class="k">After deduplication</div><div class="v">${num(R.after_dedup)}</div>
+     <div class="n">${num(R.duplicates_removed)} duplicates removed &middot; ${num(R.multi_source)} found by more than one source</div></div>
+   <div class="tile"><div class="k">Seed recall, in window</div><div class="v${A && A.missed_in_window.length ? ' am' : ''}">${recall || '&mdash;'}</div>
+     <div class="n">${A ? A.missed_in_window.length + ' of the 2023+ seed works still missing' : 'run recall_audit.py'}</div></div>
+   <div class="tile"><div class="k">Retrieved</div><div class="v" style="font-size:22px">${esc(R.retrieved||'')}</div>
+     <div class="n">window ${esc(R.window||'')}</div></div>`;
+
+  const setRows = Object.keys(R.per_set || {}).map(q => `
+    <tr><td><b class="mono">${esc(q)}</b></td>
+        <td>${num((R.phrases&&R.phrases[q]||[]).length)}</td>
+        <td>${num(R.per_set[q])}</td>
+        <td>${num((R.per_set_after_dedup||{})[q])}</td>
+        <td>${SETS[q] || ''}</td></tr>`).join('');
+
+  const srcRows = Object.keys(R.per_source || {}).map(s => `
+    <tr><td><b>${SOURCES[s] ? SOURCES[s][0] : esc(s)}</b></td>
+        <td>${num(R.per_source[s])}</td>
+        <td>${SOURCES[s] ? SOURCES[s][1] : ''}</td></tr>`).join('');
+
+  const found = A ? Object.entries(A.found_by_set).sort((a,b)=>b[1]-a[1]) : [];
+  const missed = A ? A.missed_in_window : [];
+
+  const sn = document.getElementById('seed-recall-note');
+  if(sn && A) sn.innerHTML = `<div class="warn"><b>${esc(A.recall_in_window)}</b> of the seed works
+    inside the window are in the harvested corpus${A.missed_in_window.length ?
+    `; still missing: ` + A.missed_in_window.map(m=>`<b>${esc(m.short)}</b>`).join(', ') : ''}.
+    The ${A.missed_out_of_window.length} pre-2023 entries below are background works &mdash; cited in
+    Sec. II, excluded from every PRISMA count by IC1.</div>`;
+
+  document.getElementById('hv-body').innerHTML = `
+    ${(R.sources_not_harvested||[]).length ? `<div class="warn"><b>Not harvested yet:</b>
+      ${R.sources_not_harvested.map(s=>`<span class="mono">${esc(s)}</span>`).join(', ')}.
+      An absent source is not an empty one &mdash; these counts are a floor, and the figures move
+      when it runs. Re-run it with <span class="mono">tools/harvest.py --only &lt;source&gt;</span>;
+      nothing already on file is fetched twice.</div>` : ''}
+
+    ${R.failed_requests ? `<div class="warn"><b>Incomplete run.</b> ${num(R.failed_requests)} requests
+      exhausted their retries &mdash; rate limiting, from OpenAlex or OpenReview. Those phrases have an
+      <b>unknown</b> count, not a zero, and the distinction matters: a phrase throttled to silence
+      must not enter the PRISMA figures as a phrase that found nothing. Re-run the affected source
+      with <span class="mono">tools/harvest.py --only &lt;source&gt;</span> before reporting these numbers.</div>` : ''}
+
+    <h3 class="sub">Query sets</h3>
+    <div class="tbl-scroll"><table class="doc">
+      <thead><tr><th>Set</th><th>Phrases</th><th>Raw hits</th><th>In corpus</th><th>Why it exists</th></tr></thead>
+      <tbody>${setRows || '<tr><td colspan="5">This report predates the four-set split.</td></tr>'}</tbody>
+    </table></div>
+
+    <h3 class="sub">Sources</h3>
+    <div class="tbl-scroll"><table class="doc">
+      <thead><tr><th>Source</th><th>Raw hits</th><th>What it contributes</th></tr></thead>
+      <tbody>${srcRows}</tbody>
+    </table></div>
+    <p class="prose">Scopus and Web of Science are not harvested here &mdash; they need an
+      institutional session. Run the queries above in their web interfaces and merge on DOI or
+      normalised title; the harvest output is shaped so that merge is a straight append.</p>
+
+    ${A ? `
+    <h3 class="sub">Recall audit &mdash; ${esc(A.recall_all)} seed works found</h3>
+    <p class="prose">Each of the 35 seed works is looked up in the corpus by DOI, arXiv id and
+      normalised title. Seeds published before 2023 are outside the window by IC1, so missing them
+      is correct behaviour and they are counted separately.
+      ${found.length ? 'Attribution by query set: ' + found.map(([k,v])=>`<b class="mono">${esc(k)}</b> ${v}`).join(' &middot; ') + '.' : ''}</p>
+    ${missed.length ? `
+      <div class="tbl-scroll"><table class="doc">
+        <thead><tr><th>Still missing</th><th>Group</th><th>Year</th><th>Title</th></tr></thead>
+        <tbody>${missed.map(m=>`<tr><td><b>${esc(m.short)}</b></td><td>${esc(m.group)}</td>
+          <td>${m.year}</td><td>${esc(m.title)}&hellip;</td></tr>`).join('')}</tbody>
+      </table></div>
+      <div class="warn"><b>These are real recall failures.</b> Every row is inside the window and
+        should have been found. Widen a query set, log the change in the protocol, and re-run the
+        audit &mdash; that loop is what produced the four sets in the first place.</div>`
+      : '<div class="warn"><b>No in-window seed is missing.</b> Every 2023+ seed work is in the corpus.</div>'}
+    <p class="prose">Out of window, correctly excluded:
+      ${A.missed_out_of_window.map(m=>`<b>${esc(m.short)}</b> (${m.year})`).join(', ') || 'none'}.</p>`
+    : '<p class="prose">No recall audit on file. Run <span class="mono">python3 tools/recall_audit.py</span>, then rebuild the page.</p>'}`;
+})();
+
+/* ── render: harvested corpus browser ───────────────────────────────── */
+(function(){
+  if(!CORPUS || !CORPUS.length){ document.getElementById('papers').hidden = true; return; }
+  const $ = id => document.getElementById(id);
+  const num = n => Number(n||0).toLocaleString('en-US');
+  const int = v => { const n = parseInt(v,10); return isNaN(n) ? 0 : n; };
+  const DEC = ['include','check','survey','exclude'];
+  const CLS = {include:'zero', check:'few', survey:'pre', exclude:'sup'};
+  const REASON = {EC1:'no language conditioning', EC2:'no visual observation',
+    EC3:'manipulation, no navigation', EC4:'not an embodied navigation task',
+    EC5:'autonomous driving', EC6:'survey or review', EC7:'not a paper'};
+
+  const st = {q:'', dec:new Set(), set:new Set(), src:new Set(), y0:'', y1:'', c:'',
+              sort:'citations', dir:-1, limit:250};
+
+  const sets = [...new Set(CORPUS.flatMap(r=>(r.query_sets||'').split('|').filter(Boolean)))].sort();
+  const srcs = [...new Set(CORPUS.flatMap(r=>(r.sources||'').split('|').filter(Boolean)))].sort();
+
+  const chips = (host, values, bucket, label) => {
+    $(host).innerHTML = values.map(v=>
+      `<button class="btn" data-${bucket}="${esc(v)}">${esc(label?label(v):v)}</button>`).join('');
+    $(host).querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+      const v = b.dataset[bucket];
+      st[bucket].has(v) ? st[bucket].delete(v) : st[bucket].add(v);
+      b.classList.toggle('on');
+      st.limit = 250; render();
+    }));
+  };
+  chips('pp-dec', DEC, 'dec');
+  chips('pp-set', sets, 'set');
+  chips('pp-src', srcs, 'src', v => v === 's2' ? 'semantic scholar' : v);
+
+  const view = () => {
+    const q = st.q.toLowerCase();
+    let rows = CORPUS.filter(r=>{
+      if(st.dec.size && !st.dec.has(r.decision)) return false;
+      if(st.set.size && !(r.query_sets||'').split('|').some(s=>st.set.has(s))) return false;
+      if(st.src.size && !(r.sources||'').split('|').some(s=>st.src.has(s))) return false;
+      const y = int(r.year);
+      if(st.y0 && y < int(st.y0)) return false;
+      if(st.y1 && y > int(st.y1)) return false;
+      if(st.c && int(r.citations) < int(st.c)) return false;
+      if(q && !(`${r.title} ${r.venue} ${r.doi} ${r.abstract} ${r.task}`).toLowerCase().includes(q)) return false;
+      return true;
+    });
+    rows.sort((a,b)=>{
+      const k = st.sort;
+      const av = k==='citations' ? int(a.citations) : int(a.year);
+      const bv = k==='citations' ? int(b.citations) : int(b.year);
+      return (av-bv)*st.dir || a.title.localeCompare(b.title);
+    });
+    return rows;
+  };
+
+  const render = () => {
+    const rows = view(), shown = rows.slice(0, st.limit);
+    $('pp-body').innerHTML = shown.map((r,i)=>{
+      const link = r.url ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.title)}</a>`
+                         : esc(r.title);
+      const why = r.reason_code ? (REASON[r.reason_code] || r.reason_code) : '';
+      return `<tr data-i="${i}"${r.zs_claim?' class="zs-row"':''}>
+        <td><span class="chip ${CLS[r.decision]||''}">${esc(r.decision||'—')}</span>
+            ${why?`<div class="sub-note">${esc(why)}</div>`:''}</td>
+        <td><b>${link}</b>${r.task?` <span class="chip">${esc(r.task)}</span>`:''}
+            ${r.zs_claim?' <span class="chip zero">zero-shot</span>':''}
+            <div class="sub-note ab">${esc((r.abstract||'').slice(0,180))}${(r.abstract||'').length>180?'…':''}</div></td>
+        <td>${esc(r.year)}</td>
+        <td>${esc((r.venue||'').slice(0,42))}</td>
+        <td>${r.citations?num(r.citations):'—'}</td>
+        <td class="mono" style="font-size:11px">${esc((r.query_sets||'').replace(/\|/g,' · '))}</td>
+        <td class="mono" style="font-size:11px">${esc((r.sources||'').replace(/\|/g,' · '))}</td>
+      </tr>`;
+    }).join('');
+    $('pp-empty').hidden = rows.length > 0;
+    $('pp-count').textContent = `${num(rows.length)} of ${num(CORPUS.length)} records` +
+      (rows.length > shown.length ? ` · showing ${num(shown.length)}` : '');
+    $('pp-more').hidden = rows.length <= shown.length;
+  };
+
+  const counts = {};
+  CORPUS.forEach(r=>counts[r.decision] = (counts[r.decision]||0)+1);
+  const nzs = CORPUS.filter(r=>r.zs_claim).length;
+  $('pp-tiles').innerHTML = `
+   <div class="tile"><div class="k">Pre-screened in</div><div class="v">${num(counts.include||0)}</div>
+     <div class="n">navigation + language + visual observation all present</div></div>
+   <div class="tile"><div class="k">Needs a human</div><div class="v am">${num(counts.check||0)}</div>
+     <div class="n">the gate could not call these &mdash; read them first</div></div>
+   <div class="tile"><div class="k">Excluded with a code</div><div class="v">${num(counts.exclude||0)}</div>
+     <div class="n">${num(counts.survey||0)} surveys held back for Table&nbsp;I</div></div>
+   <div class="tile"><div class="k">Zero-shot candidates</div><div class="v">${num(nzs)}</div>
+     <div class="n">claim a zero-shot, training-free or open-vocabulary result</div></div>`;
+
+
+  /* corpus statistics — computed from the rows, never typed */
+  const stat = (host, title, pairs, note) => {
+    const max = Math.max(...pairs.map(p=>p[1]), 1);
+    return `<div class="stat"><div class="k">${title}</div>` + pairs.map(([l,v])=>
+      `<div class="row"><span class="l">${esc(l)}</span>
+         <span class="b"><i style="width:${Math.round(100*v/max)}%"></i></span>
+         <span class="v">${num(v)}</span></div>`).join('') +
+      (note?`<div class="n">${note}</div>`:'') + `</div>`;
+  };
+  const by = (fn) => {
+    const m = {};
+    CORPUS.forEach(r=>{ const k = fn(r); if(k) m[k] = (m[k]||0)+1; });
+    return Object.entries(m);
+  };
+  const years = by(r=>r.year).filter(([y])=>/^\d{4}$/.test(y)).sort((a,b)=>a[0].localeCompare(b[0]));
+  const venues = by(r=>{
+    const v = (r.venue||'').trim();
+    if(!v || /^(arxiv|corr)\b/i.test(v)) return 'arXiv / CoRR (preprint)';
+    return v.length > 46 ? v.slice(0,44)+'…' : v;
+  }).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const nsrc = {};
+  CORPUS.forEach(r=>{ const n = (r.sources||'').split('|').filter(Boolean).length;
+                      const k = n>=3 ? '3 or more' : n===2 ? '2 sources' : '1 source';
+                      nsrc[k] = (nsrc[k]||0)+1; });
+  const setPairs = by(r=>null).length ? [] : (()=>{
+    const m = {};
+    CORPUS.forEach(r=>(r.query_sets||'').split('|').filter(Boolean)
+      .forEach(s=>m[s]=(m[s]||0)+1));
+    return Object.entries(m).sort((a,b)=>b[1]-a[1]);
+  })();
+  $('pp-stats').innerHTML = '<div class="stats">' +
+    stat('', 'By year', years,
+         'The window opens 2023-01-01. Anything dated later than 2026-09-30 is out of window and gets caught in screening.') +
+    stat('', 'By query set', setPairs,
+         'A record can be found by more than one set, so these sum above the corpus size.') +
+    stat('', 'Sources per record', Object.entries(nsrc).sort(),
+         'Agreement between independent sources. A record only one source knows about is the one worth checking by hand.') +
+    stat('', 'Top venues', venues,
+         'Preprints are counted as one venue: this literature publishes on arXiv first.') +
+    '</div>';
+
+  $('pp-q').addEventListener('input', e=>{ st.q = e.target.value; st.limit = 250; render(); });
+  ['y0','y1','c'].forEach(k=>$('pp-'+k).addEventListener('input', e=>{
+    st[k] = e.target.value; st.limit = 250; render(); }));
+  $('pp-more').addEventListener('click', ()=>{ st.limit += 500; render(); });
+  document.querySelector('#papers thead th.s').addEventListener('click', ()=>{
+    st.dir = -st.dir; render(); });
+  document.querySelectorAll('#papers [data-pp]').forEach(b=>b.addEventListener('click', ()=>{
+    const p = b.dataset.pp;
+    st.q=''; st.y0=st.y1=st.c=''; st.dec.clear(); st.set.clear(); st.src.clear(); st.limit=250;
+    $('pp-q').value=''; ['y0','y1','c'].forEach(k=>$('pp-'+k).value='');
+    document.querySelectorAll('#papers .filters .btn.on').forEach(x=>x.classList.remove('on'));
+    if(p==='include') st.dec.add('include');
+    if(p==='check')   st.dec.add('check');
+    if(p==='survey')  st.dec.add('survey');
+    if(p==='zs'){ st.q='zero-shot'; $('pp-q').value='zero-shot'; }
+    if(p==='cited'){ st.sort='citations'; st.dir=-1; st.c='20'; $('pp-c').value='20'; }
+    render();
+  }));
+  $('pp-csv').addEventListener('click', ()=>{
+    const cols = ['decision','reason_code','title','year','venue','citations','task','zs_claim',
+                  'doi','arxiv','url','query_sets','sources'];
+    const q = v => `"${String(v==null?'':v).replace(/"/g,'""')}"`;
+    const body = view().map(r=>cols.map(c=>q(r[c])).join(',')).join('\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([cols.join(',')+'\n'+body], {type:'text/csv;charset=utf-8'}));
+    a.download = 'vln_corpus_filtered.csv'; a.click(); URL.revokeObjectURL(a.href);
+  });
+
+  render();
+})();
+
+/* ── render: reading list ───────────────────────────────────────────── */
+(function(){
+  const sec = document.getElementById('read');
+  if(!READING || !READING.rows || !READING.rows.length){ sec.hidden = true; return; }
+  const num = n => Number(n||0).toLocaleString('en-US');
+  const R = READING.rows, notes = {};
+  READING.tiers.forEach(t=>notes[t.name] = t.note);
+  const peer = r => r.venue && !/^(arxiv|corr)\b/i.test(r.venue.trim());
+
+  document.getElementById('rd-tiles').innerHTML = `
+   <div class="tile"><div class="k">Papers to read</div><div class="v">${R.length}</div>
+     <div class="n">from a pool of ${num(READING.pool)} pre-screened ${READING.from_year}&ndash;${READING.to_year} records</div></div>
+   <div class="tile"><div class="k">Peer-reviewed</div><div class="v">${R.filter(peer).length}</div>
+     <div class="n">the rest are preprints that clear the §6 preprint rule</div></div>
+   <div class="tile"><div class="k">Seed works</div><div class="v am">${R.filter(r=>String(r.is_seed)==='True'||r.is_seed===true).length}</div>
+     <div class="n">pinned: the field's landmarks are not ranked, they are included</div></div>
+   <div class="tile"><div class="k">Median citations/yr</div><div class="v">${
+     (()=>{const v=R.map(r=>+r.cites_per_year||0).sort((a,b)=>a-b);return v[Math.floor(v.length/2)];})()}</div>
+     <div class="n">age-normalised, so a 2026 paper can outrank a 2024 one</div></div>`;
+
+  const short = READING.short || {};
+  let html = '';
+  READING.tiers.forEach(t=>{
+    const g = R.filter(r=>r.tier === t.name);
+    if(!g.length) return;
+    html += `<h3 class="sub">${esc(t.name)} <span style="text-transform:none;letter-spacing:0;
+      font-weight:500;color:var(--muted)">&mdash; ${g.length} papers</span></h3>
+      <p class="prose" style="margin-top:6px">${esc(t.note)}</p>`;
+    if(short[t.name]) html += `<div class="warn"><b>Short by ${short[t.name].quota - short[t.name].got}.</b>
+      Only ${short[t.name].got} of ${short[t.name].quota} slots could be filled from work that is
+      peer-reviewed, cited or a seed. The corpus is thin here, and a survey chapter built on it
+      will be too &mdash; say so rather than padding it.</div>`;
+    html += '<ol class="rd">' + g.map(r=>{
+      const link = r.url ? `<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.title)}</a>` : esc(r.title);
+      const seed = String(r.is_seed)==='True'||r.is_seed===true;
+      return `<li><span class="rk">${r.rank}</span><div class="bd">
+        <p class="tt">${link}${seed?' <span class="chip zero">seed</span>':''}
+          ${r.task?`<span class="chip">${esc(r.task)}</span>`:''}
+          ${r.zs_claim?'<span class="chip few">zero-shot</span>':''}</p>
+        <div class="mt"><span>${esc(r.year)}</span>
+          ${r.venue?`<span>${esc(String(r.venue).slice(0,46))}</span>`:'<span>preprint</span>'}
+          ${r.citations?`<span><b>${num(r.citations)}</b> cited · ${r.cites_per_year}/yr</span>`:''}
+          <span class="mono">${esc(String(r.sources||'').replace(/\|/g,' · '))}</span></div>
+        </div></li>`;
+    }).join('') + '</ol>';
+  });
+  document.getElementById('rd-body').innerHTML = html;
+})();
 
 syncControls(); render();
 </script>

@@ -3,10 +3,12 @@
 OpenAlex is used instead of Semantic Scholar because the unauthenticated S2 pool
 rate-limits (HTTP 429) immediately. All citation counts therefore come from a single
 consistent source and can be cited as: OpenAlex, retrieved <date>.
-Writes corpus_seeds.json + corpus_seeds.csv next to this file."""
+Writes data/corpus_seeds.json + data/corpus_seeds.csv next to this file."""
 import json, csv, time, urllib.parse, urllib.request, urllib.error, re, sys, os, datetime
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(HERE)                    # tools/ -> repository root
+DATA = os.path.join(ROOT, "data")
 API = "https://api.openalex.org/works"
 
 SEEDS = [
@@ -144,9 +146,9 @@ for i, (grp, short, sup, zs, task, sec, title) in enumerate(SEEDS, 1):
 
 meta = {"source": "OpenAlex", "retrieved": datetime.date.today().isoformat(),
         "n": len(rows), "resolved": sum(r["resolved"] for r in rows)}
-with open(os.path.join(HERE, "corpus_seeds.json"), "w", encoding="utf-8") as f:
+with open(os.path.join(DATA, "corpus_seeds.json"), "w", encoding="utf-8") as f:
     json.dump({"meta": meta, "rows": rows}, f, ensure_ascii=False, indent=1)
 cols = list(rows[0].keys())
-with open(os.path.join(HERE, "corpus_seeds.csv"), "w", encoding="utf-8", newline="") as f:
+with open(os.path.join(DATA, "corpus_seeds.csv"), "w", encoding="utf-8", newline="") as f:
     w = csv.DictWriter(f, fieldnames=cols); w.writeheader(); w.writerows(rows)
 print(f"\nDONE {meta}", file=sys.stderr)

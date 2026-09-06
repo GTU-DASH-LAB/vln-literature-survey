@@ -44,6 +44,7 @@ PRISMA counts* — say this explicitly, it is a common reviewer complaint.
 | **arXiv (cs.CV, cs.RO, cs.AI, cs.CL)** | The majority of 2025–2026 VLN work appears here first. Excluding it makes the survey stale on arrival. Use the arXiv API, not the web UI |
 | **OpenReview + PMLR** | NeurIPS / ICLR / ICML / **CoRL** — the venues Scopus and WoS do not index, and CoRL is central to embodied navigation |
 | **DBLP / Semantic Scholar API** | Deduplication, canonical venue resolution, and forward-citation snowballing at scale |
+| **Crossref** | The DOI metadata IEEE, ACM, Springer and Elsevier deposit. It is not a replacement for Scopus — no controlled vocabulary, no citation graph, patchy abstracts — but it is the one keyless way to reach that publisher content, and it is harvested (2026-09-05) |
 
 ### Tier 3 — supporting, not counted as primary
 
@@ -61,6 +62,14 @@ PRISMA counts* — say this explicitly, it is a common reviewer complaint.
 
 **Bottom line:** Scopus + WoS + IEEE Xplore + arXiv + OpenReview/PMLR is the defensible set.
 Five sources, no redundancy, full coverage of the field's actual publication venues.
+
+**What is actually automated (2026-09-05).** Six sources answer without credentials and are
+harvested by `harvest.py`: OpenAlex, Crossref, Semantic Scholar, arXiv, DBLP and OpenReview.
+**IEEE Xplore is wired as a seventh** and runs as soon as `IEEE_API_KEY` is exported; without
+the key the source is skipped and says so. Scopus and Web of Science stay manual, and must not
+be silently dropped from the PRISMA counts: run their queries in the web interfaces and merge
+the export with `merge_export.py`, which writes into the same raw log tagged `source=scopus`
+or `source=wos`.
 
 ---
 
@@ -158,6 +167,17 @@ what keeps it tractable. Do **not** relax the navigation block to boost recall.
 Final Scopus set = Q1 ∪ Q2 ∪ Q3 ∪ Q4 ∪ Q5, deduplicated. Export **CSV with abstracts + references**
 (needed for VOSviewer co-citation) *and* BibTeX.
 
+Then merge the export into the corpus rather than keeping it in a second spreadsheet:
+
+```bash
+python3 merge_export.py scopus.csv --set core      # or --set recall / zeroshot / enabler
+python3 recall_audit.py                            # re-run the audit on the merged corpus
+```
+
+Records land in `corpus_raw.csv` tagged `source=scopus`, dedupe against the harvested records on
+DOI and normalised title, and count in PRISMA identification like any other source. Rows dated
+before 2023 are dropped on merge, so the window cut is applied identically to every source.
+
 ### 5.2 Web of Science Core Collection — Advanced search
 
 ```
@@ -220,8 +240,26 @@ Then, for every arXiv hit, resolve the peer-reviewed version through DBLP / Sema
 keep only one record per work (prefer the published version; keep the arXiv one only if unpublished).
 
 ### 5.6 OpenReview / PMLR
-Manually sweep NeurIPS, ICLR, ICML **2023–2026** and **CoRL 2023–2025** proceedings pages for
-title/abstract matches on blocks A+B and A+D. Log counts like any other source.
+
+**Deviation, 2026-09-05 — the manual sweep is now an API harvest.** `harvest.py` queries the
+OpenReview `notes/search` endpoint as a fourth source, on both hosts: `api2.openreview.net`
+serves the 2024+ venues, `api.openreview.net` the earlier ones together with DBLP-imported
+records. Every phrase in all four query sets is run against it, so NeurIPS, ICLR, ICML and
+CoRL are counted like any other source instead of being swept by hand.
+
+Two filters are applied at harvest time, and both need stating in Sec. III:
+
+- **Under-review submissions are dropped.** OpenReview indexes papers while they are still in
+  review, with `venue = "Submitted to ICLR 2026"` and `authors = ["Anonymous"]`. They are not
+  peer-reviewed (IC2) and are not citable; counting them would inflate identification.
+- **Year comes from the venue string** (`ICLR 2024 poster`, `CoRR 2023`) and falls back to the
+  posting date, so the 2023 window cut is the same one every other source gets.
+
+Workshop posters (`LangRob @ CoRL 2023 Poster`) *are* harvested — EC7 is a screening decision,
+not a harvest one, and the count has to be visible before it can be excluded.
+
+PMLR is still not harvested directly; ICML and CoRL come through OpenReview and Semantic
+Scholar. If a PMLR-only gap shows up in the recall audit, add it as a fifth source.
 
 ### 5.7 Recall audit — executed 2026-09-05, and what it changed
 
@@ -252,7 +290,57 @@ Consequences for the protocol:
 `harvest.py` implements all four sets and tags every record with the set and phrase that
 found it, so any of these numbers can be recomputed from `corpus_raw.csv`.
 
----
+### 5.8 Recall audit — the widening, and where it landed
+
+Same 35 seeds, same method, run by `recall_audit.py` after every change. The loop ran three
+times over two days:
+
+| | Q1 only | Four sets, five sources | + vocabulary fix, + OpenAlex |
+|---|---|---|---|
+| Seed works found | 8 / 35 | 23 / 35 | **26 / 35** |
+| In window (2023+, the only ones IC1 counts) | 8 / 26 | 23 / 26 | **26 / 26** |
+| Raw identification | 2 673 | 6 432 | 11 244 |
+| After deduplication | 710 | 2 618 | 3 208 |
+
+**Every in-window seed work is now in the corpus.** The nine that are not are all pre-2023
+background works — R2R, HAMT, DUET, ZSON, SayCan, LM-Nav, CLIP-Nav, Rec-VLN-BERT, VLN-CE —
+excluded by IC1 and cited in Sec. II instead.
+
+Attribution by set: `recall` 13, `core` 8, `zeroshot` 8, `enabler` 6 (a seed can be found by
+more than one). **`core` alone still only reaches 8 of 26.** That is the whole argument for the
+split, and it is the number to quote when a reviewer asks why the protocol does not simply run
+Q1 in Scopus.
+
+**What the second pass fixed.** The three seeds still missing after the widening each failed
+for a different reason, and two of them were a vocabulary gap rather than a coverage gap:
+
+| Seed | Why it was missing | Fix |
+|---|---|---|
+| **L3MVN** | Titled *Leveraging Large Language Models for Visual Target Navigation* — no set carried "visual target navigation" | phrase added to `recall` |
+| **GOAT-Bench** | *A Benchmark for Multi-Modal Lifelong Navigation* — neither "lifelong" nor "multi-modal navigation" was a phrase | both added to `recall` |
+| **ConceptFusion** | The `enabler` set had `open-set 3d mapping`; the paper says *open-set multimodal 3D mapping*, which never matches as a phrase | `multimodal 3d mapping` added to `enabler` |
+
+The lesson generalises: a phrase query fails on the *title the authors chose*, not on the topic.
+The seed list is what makes that failure visible, which is why §5.7 mandates re-running the audit
+after every query change.
+
+**Rate limiting is a first-class problem here, not an incident.** OpenAlex 429-blocked the
+machine for hours after the first full four-set run and stayed closed until the daily quota
+reset; OpenReview does the same on a shorter cycle. Two things follow, and both are now in the
+code rather than in someone's memory:
+
+1. `corpus_raw.csv` is **append-only**. Every block of hits is written as it is collected, and
+   any run rebuilds the corpus and the report from the whole file. A killed run costs nothing.
+2. A request that exhausts its retries is recorded as `(incomplete)`, never as a zero. A phrase
+   that returned nothing because it was throttled must not enter the PRISMA counts as a phrase
+   that found nothing.
+
+Set `OPENALEX_MAILTO` to use the polite pool: the second full OpenAlex pass, with it set, ran
+all four sets in six minutes with a single failed request.
+
+**Still outstanding.** IEEE Xplore is wired but its key is awaiting activation; Scopus and Web of
+Science need an institutional session and merge through `merge_export.py`. The page says which
+sources have not run, because an absent source is not an empty one.
 
 ## 6. Inclusion / exclusion criteria
 
@@ -304,6 +392,14 @@ Snowballing       backward (reference lists of included papers)
       ↓
 Included          final corpus                      N5
 ```
+
+**Automated pre-screen (2026-09-05).** `screen.py` fills `decision` and `reason_code` from
+title/abstract keywords before the human pass: `include` when navigation, language conditioning
+and visual observation are all present, `survey` for EC6, `exclude` with the EC code that fired,
+and `check` when the gate cannot call it. On the current corpus that is 854 / 61 / 1 544 / 159.
+It is an aid, not a decision — declare it in Sec. III, report the human pass separately, and note
+that the pre-screen was applied uniformly before any human judgement, so it cannot bias one arm.
+Rows a human has already decided are never overwritten.
 
 Tooling: **Zotero** (+ Better BibTeX → `.bib` for IEEEtran, pin citation keys) for the library;
 **Rayyan** or **ASReview** for two-pass screening with reason codes; **VOSviewer** or the R

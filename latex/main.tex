@@ -1,0 +1,457 @@
+%% =====================================================================
+%%  From Supervised Instruction Following to Zero-Shot Embodied Reasoning
+%%  A Survey of Vision-and-Language Navigation with Foundation Models
+%%
+%%  Fouad Aladhami — Gebze Technical University
+%%
+%%  Overleaf: this compiles as-is. IEEEtran ships with Overleaf's TeX Live.
+%%  For IEEE Access instead, swap the class line for
+%%      \documentclass{ieeeaccess}
+%%  and keep everything else.
+%%
+%%  numbers.tex is GENERATED — run ./refresh.sh in the repository root and
+%%  copy it back, or symlink it. Never type a corpus figure by hand: every
+%%  \Corpus... \Scr... \Recall... macro below comes from the harvest log.
+%% =====================================================================
+\documentclass[journal]{IEEEtran}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric,arrows.meta,positioning,calc}
+
+\input{numbers}          % generated: \CorpusRaw, \CorpusDedup, \RecallWindow, ...
+
+\begin{document}
+
+\title{From Supervised Instruction Following to Zero-Shot Embodied
+Reasoning: A Survey of Vision-and-Language Navigation with Large Language
+and Vision-Language Models (2023--2026)}
+
+\author{Fouad~Aladhami%
+\thanks{The author is with the Department of Computer Engineering,
+Gebze Technical University, Kocaeli, T\"urkiye
+(e-mail: see corresponding author details).}}
+
+\markboth{IEEE Transactions on XXX,~Vol.~XX, No.~X, 2026}%
+{Aladhami: Vision-and-Language Navigation with Foundation Models}
+
+\maketitle
+
+\begin{abstract}
+%% Write this LAST. Structure: (1) the shift this survey covers, (2) what
+%% makes it different from prior VLN surveys, (3) the zero-shot audit as the
+%% central contribution, (4) the headline finding of Table VII, (5) the
+%% open problems. Roughly 200 words, no citations, no undefined acronyms.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Vision-and-language navigation, embodied AI, zero-shot navigation,
+training-free navigation, large language models, vision-language models,
+object goal navigation, robot navigation, foundation models.
+\end{IEEEkeywords}
+
+% =====================================================================
+\section{Introduction}\label{sec:intro}
+% 1.1 Motivation: language as the interface to mobile robots.
+% 1.2 Why now: the post-2023 shift from task-specific VLN models to
+%     foundation-model agents, and the parallel shift from *training on R2R*
+%     to *prompting an off-the-shelf model*.
+% 1.3 Scope: camera-based (RGB / RGB-D / panoramic) navigation driven by
+%     natural language. State the exclusions here, not in Sec. III alone:
+%     autonomous driving, manipulation-only VLA, GUI/web agents.
+% 1.4 Comparison with existing surveys -> Table~\ref{tab:surveys}, and the
+%     gap statement this paper's existence rests on.
+% 1.5 Contributions. One of them must be the zero-shot claim audit.
+% 1.6 Organisation + Fig.~\ref{fig:organisation}.
+
+\subsection{Motivation}
+\subsection{Why Now: The Foundation-Model Shift}
+\subsection{Scope of This Survey}
+\subsection{Comparison with Existing Surveys}
+% Table I goes here; the gap sentence goes immediately after it.
+\subsection{Contributions}
+% \begin{itemize}
+%   \item A unified definition and audit of what ``zero-shot'' means across
+%         the VLN literature (ZS-1--ZS-5), applied to every zero-shot paper
+%         in the corpus --- Table~\ref{tab:zsaudit}.
+%   \item ...
+% \end{itemize}
+\subsection{Paper Organisation}
+
+\begin{figure}[!t]
+  \centering
+  % \includegraphics[width=\columnwidth]{fig/organisation.pdf}
+  \caption{Organisation of this survey.}
+  \label{fig:organisation}
+\end{figure}
+
+\begin{table*}[!t]
+  \caption{Comparison with prior surveys on vision-and-language navigation.}
+  \label{tab:surveys}
+  \centering
+  \begin{tabular}{llccccc}
+    \toprule
+    Survey & Year & Period & LLM/VLM & \textbf{Zero-shot} & Real robot & \#Papers \\
+    \midrule
+    % One row per prior survey. The zero-shot column is the one that
+    % justifies this paper --- keep it, even where the answer is "no".
+    \bottomrule
+  \end{tabular}
+\end{table*}
+
+% =====================================================================
+\section{Background and Problem Formulation}\label{sec:background}
+\subsection{Formal Definition}
+% POMDP <S, A, O, T, R> with an instruction conditioning variable.
+\subsection{Observation Space}
+% monocular / panoramic / RGB-D / multi-camera
+\subsection{Action Space}
+% discrete panoramic graph / continuous waypoint / low-level control
+\subsection{Task Family}
+% R2R, RxR, REVERIE, SOON, CVDN, Touchdown, VLN-CE, ObjectNav,
+% demand-driven, social and aerial navigation --- and how they differ formally.
+\subsection{Generalisation Settings}
+% seen/unseen split, unseen environment, unseen instruction style, unseen
+% object category, unseen embodiment. Forward-reference Sec.~\ref{sec:zs-defs}.
+\subsection{Terminology}
+
+% =====================================================================
+\section{Review Methodology}\label{sec:method}
+% This section is written FIRST --- it fixes the corpus. Every number below
+% is a macro from numbers.tex and updates with the harvest.
+
+\subsection{Research Questions}
+% RQ1 architectural roles of LLM/VLM in navigation agents
+% RQ2 observation and scene-representation choices
+% RQ3 datasets, simulators, comparability of reported results
+% RQ4 simulation to real robot, and what limits it
+% RQ5 zero-shot: which senses are claimed, and the gap to supervised SOTA
+% RQ6 open challenges
+
+\subsection{Databases and Rationale}
+% Scopus, Web of Science and IEEE Xplore are the Tier-1 sources; OpenAlex,
+% Crossref, Semantic Scholar, arXiv, DBLP and OpenReview are harvested
+% programmatically. State plainly that Scopus and WoS do not index
+% NeurIPS/ICLR/ICML/CoRL, which is why OpenReview is mandatory here.
+
+\subsection{Search Strings}
+% Q1 core phrase family; Q2/Q4 recall; Q3 foundation-model axis;
+% Q5 zero-shot axis. Reproduce them verbatim in the appendix.
+
+\subsection{Inclusion and Exclusion Criteria}
+% IC1--IC6, EC1--EC8, the preprint rule, and the zero-shot ObjectNav
+% boundary decision.
+
+\subsection{Screening and the PRISMA Flow}
+Identification returned \CorpusRaw{} records across the harvested sources.
+Deduplication on DOI, arXiv identifier and normalised title removed
+\CorpusDupes{} duplicate rows, of which \CorpusMultiSource{} records were
+independently returned by more than one source, leaving \CorpusDedup{}
+unique records for screening. Title-and-abstract screening excluded
+\ScrExclude{} records under EC1--EC7, held \ScrSurvey{} surveys aside for
+Table~\ref{tab:surveys}, and carried \ScrInclude{} records forward, with
+\ScrCheck{} flagged for individual adjudication.
+% Fig. 2 renders these same macros, so the figure and the prose can never
+% disagree with each other or with the repository.
+
+\begin{figure}[!t]
+  \centering
+  \begin{tikzpicture}[
+      node distance=7mm,
+      box/.style={draw, rounded corners=1pt, align=center, inner sep=3pt,
+                  font=\footnotesize, text width=0.55\columnwidth},
+      note/.style={draw, dashed, align=left, inner sep=3pt,
+                   font=\scriptsize, text width=0.30\columnwidth},
+      ar/.style={-{Latex[length=2mm]}}]
+    \node[box] (id) {\textbf{Identification}\\ \CorpusRaw{} records retrieved};
+    \node[box, below=of id] (dd) {\textbf{Deduplication}\\ \CorpusDedup{} unique records};
+    \node[box, below=of dd] (sc) {\textbf{Screening}\\ title and abstract, \CorpusDedup{} assessed};
+    \node[box, below=of sc] (el) {\textbf{Eligibility}\\ \ScrInclude{} full-text candidates};
+    \node[box, below=of el] (in) {\textbf{Included}\\ $N$ studies (fill after full-text pass)};
+    \draw[ar] (id) -- (dd); \draw[ar] (dd) -- (sc);
+    \draw[ar] (sc) -- (el); \draw[ar] (el) -- (in);
+    \node[note, right=2mm of dd.east, anchor=west]
+      {\CorpusDupes{} duplicate rows removed};
+    \node[note, right=2mm of sc.east, anchor=west]
+      {\ScrExclude{} excluded, EC1--EC7\\ \ScrSurvey{} surveys held aside};
+  \end{tikzpicture}
+  \caption{PRISMA flow. Counts are generated from the harvest log
+  (retrieved \HarvestDate{}); the window is \HarvestWindow{}.}
+  \label{fig:prisma}
+\end{figure}
+
+\subsection{Snowballing}
+% Backward from included papers; forward through Semantic Scholar cited-by,
+% restricted to the window. State the five entry points.
+
+\subsection{Search Validation}
+A hand-curated set of \SeedTotal{} landmark works serves as a recall check:
+after every change to the query set, the corpus is tested for how many of
+them it returns. The final configuration recovers \RecallWindow{} of the
+seed works published inside the window; the remainder are pre-2023 and
+excluded by IC1. The single-phrase core query recovers only 8, which is
+why the protocol runs four query sets rather than one.
+% This paragraph is the answer to "why not just run Q1 in Scopus", and a
+% reviewer will ask it.
+
+\subsection{Research Landscape}
+% Figs. 3--5: publications per year, venue distribution, keyword
+% co-occurrence, and the "zero-shot" term-frequency curve that makes
+% Sec. IX empirically motivated rather than rhetorical.
+
+\subsection{Threats to Validity}
+% Single-author screening (report intra-rater agreement on a 10\% resample);
+% the automated pre-screen and why it cannot bias one arm; \FailedRequests{}
+% rate-limited requests whose true counts are unknown; sources not harvested.
+
+% =====================================================================
+\section{Taxonomy}\label{sec:taxonomy}
+% One full-page figure + a paragraph per branch giving the criterion that
+% separates siblings. Supervision level is a shading overlay, NOT a branch.
+
+\begin{figure*}[!t]
+  \centering
+  % \includegraphics[width=\textwidth]{fig/taxonomy.pdf}
+  \caption{Taxonomy of foundation-model navigation methods. Shading encodes
+  the supervision level, which is orthogonal to the paradigm axis.}
+  \label{fig:taxonomy}
+\end{figure*}
+
+% =====================================================================
+\section{Environments, Datasets and Simulators}\label{sec:data}
+\subsection{Photorealistic Scene Datasets}
+\subsection{Simulators}
+\subsection{Instruction Corpora and Their Generation}
+\subsection{Comparison}
+\subsection{Data Augmentation and Synthetic Environments}
+\subsection{Benchmarks Targeting Generalisation}
+
+\begin{table*}[!t]
+  \caption{Datasets, simulators and benchmarks.}
+  \label{tab:datasets}
+  \centering
+  \begin{tabular}{lllcccl}
+    \toprule
+    Resource & Type & Scenes & Instructions & Continuous & Licence & Used by \\
+    \midrule
+    \bottomrule
+  \end{tabular}
+\end{table*}
+
+% =====================================================================
+\section{Visual Perception and Scene Representation}\label{sec:perception}
+\subsection{Frame-Level Encoders}
+\subsection{Panoramic versus Monocular Observation}
+\subsection{Depth, Point Clouds and Geometry}
+\subsection{Map Representations}
+\subsection{Open-Vocabulary and Language-Queryable Maps}\label{sec:ovmaps}
+% The structural enabler of zero-shot navigation. Sec. 9.3 pays this off.
+\subsection{Memory}
+
+% =====================================================================
+\section{Language Understanding and Cross-Modal Grounding}\label{sec:language}
+\subsection{Instruction Decomposition}
+\subsection{Cross-Modal Attention and Alignment}
+\subsection{Open-Vocabulary Grounding}
+\subsection{Spatial and Relational Language}
+\subsection{Dialogue and Ambiguous Instructions}
+
+% =====================================================================
+\section{Learned Navigation Policies}\label{sec:policies}
+% Fixed subsection template for each paradigm:
+% idea -> representative works -> inputs/outputs -> training signal ->
+% strengths -> failure modes. Keep the template visible; it is what makes
+% a survey readable rather than a list.
+\subsection{Pre-Foundation Baselines}
+\subsection{Vision-Language Pretraining Agents}
+\subsection{MLLMs and VLMs Fine-Tuned as Policies}
+\subsection{Hierarchical and Modular Learned Systems}
+\subsection{LLM-Augmented Training}
+\subsection{Uncertainty, Backtracking and Recovery}
+\subsection{Comparative Summary}
+
+\begin{table*}[!t]
+  \caption{Method comparison. Supervision level is a column, not a section.}
+  \label{tab:methods}
+  \centering
+  \begin{tabular}{llllllcc}
+    \toprule
+    Method & Backbone & Observation & Action & Map & Supervision & Benchmark & SR / SPL \\
+    \midrule
+    \bottomrule
+  \end{tabular}
+\end{table*}
+
+% =====================================================================
+\section{Zero-Shot and Training-Free Navigation}\label{sec:zeroshot}
+% The chapter this survey exists for.
+
+\subsection{What ``Zero-Shot'' Means in VLN}\label{sec:zs-defs}
+% ZS-1 training-free      no gradient updates for the navigation policy
+% ZS-2 open-vocabulary    goal category never in a label set
+% ZS-3 cross-dataset      trained on A, evaluated on B
+% ZS-4 unseen environment the standard val-unseen split --- state plainly
+%                         that this is NOT zero-shot, several papers imply it is
+% ZS-5 cross-embodiment   sim-to-real, or a morphology never trained on
+
+\begin{table*}[!t]
+  \caption{Zero-shot claim audit. For each paper: the sense of ``zero-shot''
+  claimed, what was actually pretrained, and whether any component saw
+  in-domain data.}
+  \label{tab:zsaudit}
+  \centering
+  \begin{tabular}{llccccccl}
+    \toprule
+    \multirow{2}{*}{Method} & \multirow{2}{*}{Venue} &
+    \multicolumn{5}{c}{Claim} & In-domain & \multirow{2}{*}{What was pretrained} \\
+    \cmidrule(lr){3-7}
+     & & ZS-1 & ZS-2 & ZS-3 & ZS-4 & ZS-5 & data touched & \\
+    \midrule
+    % The in-domain column is the point of the table: almost every
+    % "training-free" agent still leans on a waypoint predictor, a detector,
+    % or CLIP weights trained on overlapping data.
+    \bottomrule
+  \end{tabular}
+\end{table*}
+
+\subsection{Training-Free LLM-as-Planner Agents}
+% observation -> captioner / open-vocab detector -> textual scene description
+% -> LLM selects the next viewpoint -> repeat. Cover the design choices:
+% panorama verbalisation, history carrying, action-space presentation,
+% invalid-action handling.
+\subsection{Open-Vocabulary Perception as the Enabler}
+\subsection{Frontier Exploration with Semantic Scoring}
+\subsection{Prompting and Reasoning Strategies}
+\subsection{Code-as-Policy and Tool Use}
+\subsection{The Middle Ground}
+% Few-shot in-context learning, retrieval-augmented navigation, test-time
+% adaptation --- and the counter-trend of distilling zero-shot agents into
+% small supervised policies, which is cheaper and faster but loses the
+% open-vocabulary property. This trade-off is the honest conclusion.
+\subsection{Open-Source versus Closed-Model Agents}
+% The reproducibility problem: when a closed model version is deprecated,
+% the reported numbers can never be reproduced again.
+\subsection{Zero-Shot versus Supervised State of the Art}
+
+\begin{figure}[!t]
+  \centering
+  % \includegraphics[width=\columnwidth]{fig/zs-loop.pdf}
+  \caption{The canonical zero-shot navigation loop: observation,
+  open-vocabulary perception, text or value map, LLM reasoning, action,
+  memory update.}
+  \label{fig:zsloop}
+\end{figure}
+
+\begin{table*}[!t]
+  \caption{Zero-shot versus supervised state of the art per benchmark and
+  year, with the cost axis the leaderboards omit.}
+  \label{tab:zsvssup}
+  \centering
+  \begin{tabular}{llccccc}
+    \toprule
+    Benchmark & Year & Supervised SOTA & Best zero-shot & Gap &
+    Tokens/episode & Latency/step \\
+    \midrule
+    % An agent at 8 s/step is not deployable, and no benchmark table says so.
+    \bottomrule
+  \end{tabular}
+\end{table*}
+
+\subsection{Failure Modes Specific to Zero-Shot Agents}
+% Hallucinated landmarks; the captioning bottleneck; weak metric and
+% relational spatial reasoning; oscillation without learned value functions;
+% assumed oracle waypoint control; prompt sensitivity --- and the fact that
+% most papers report a single seed.
+
+% =====================================================================
+\section{Evaluation: Metrics, Benchmarks and Results}\label{sec:eval}
+\subsection{Metrics and Their Pitfalls}
+\subsection{Leaderboards}
+\subsection{Cross-Paper Comparability}
+\subsection{The Human Performance Gap}
+\subsection{Beyond Success Rate}
+\subsection{Towards a Fair Zero-Shot Evaluation Protocol}
+% A survey is allowed one normative recommendation. This is it.
+
+\begin{table}[!t]
+  \caption{Metric definitions.}
+  \label{tab:metrics}
+  \centering
+  \begin{tabular}{llp{3.2cm}}
+    \toprule
+    Metric & Definition & Pitfall \\
+    \midrule
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% =====================================================================
+\section{From Simulation to the Real World}\label{sec:real}
+\subsection{Sources of the Sim-to-Real Gap}
+\subsection{Robot Embodiments}
+\subsection{Onboard Compute and Latency Budgets}
+\subsection{Reported Deployments}
+% Note how many real-world demonstrations are zero-shot precisely BECAUSE
+% there is no real-world training data.
+\subsection{Safety and Social Navigation}
+
+\begin{table}[!t]
+  \caption{Reported real-robot deployments.}
+  \label{tab:realrobot}
+  \centering
+  \begin{tabular}{llll}
+    \toprule
+    System & Platform & Compute & Evaluation \\
+    \midrule
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+% =====================================================================
+\section{Applications}\label{sec:apps}
+% Assistive navigation for visually impaired users, service and domestic
+% robots, warehouse and inspection, search and rescue, aerial last-mile
+% delivery, AR wayfinding.
+
+% =====================================================================
+\section{Open Challenges and Future Directions}\label{sec:challenges}
+% Mirror the research questions; 8--10 numbered challenges.
+% 1) Closing the zero-shot / supervised gap without losing open-vocabulary
+%    generality. 2) The perception bottleneck of text-mediated pipelines.
+% 3) Spatial reasoning limits of current MLLMs. 4) Reproducibility of
+%    closed-model agents. 5) Latency and on-board deployment. 6) Long-horizon
+%    and lifelong navigation. 7) Synthetic-data collapse. 8) Unified
+%    benchmarks and a standard real-robot protocol. 9) Generalist embodied
+%    models versus specialised navigation policies. 10) Multi-agent and
+%    human-in-the-loop navigation.
+
+% =====================================================================
+\section{Conclusion}\label{sec:conclusion}
+% Written second to last. The introduction is written last, so that it
+% promises only what the paper delivers.
+
+% =====================================================================
+\appendices
+\section{Query Strings and Per-Source Counts}\label{app:queries}
+% Reproduce Q1--Q5 verbatim and the per-source identification counts, so the
+% search is reproducible from the paper alone.
+
+% =====================================================================
+%% While the manuscript is still a skeleton it contains no \cite commands, and
+%% BibTeX then emits an empty bibliography -- which LaTeX reports as
+%% "Something's wrong--perhaps a missing \item". \nocite{*} pulls in every entry
+%% of refs.bib (the full reading list), so the bibliography compiles and you can
+%% see what you have. Delete this line once the prose cites papers properly, or
+%% keep it while drafting to keep the reading list in front of you.
+\nocite{*}
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
+
+\end{document}
