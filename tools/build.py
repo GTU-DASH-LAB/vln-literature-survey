@@ -4,7 +4,7 @@
 The page is deliberately self-contained: no external requests, no CDN, fonts embedded
 as woff2 data URIs. Edit build/page.template.html — never index.html.
 """
-import json, os
+import json, os, re
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)                    # tools/ -> repository root
@@ -49,7 +49,48 @@ def load_corpus():
         out.append(d)
     return out
 corpus = load_corpus()
-out = (tpl.replace('/*FONTS*/', fonts)
+def scope_css(css, scope):
+    """Prefix every selector in a stylesheet with `scope`.
+
+    Inlining an SVG drops its <style> into the page's global CSS scope, and this
+    figure's class names are one and two letters (.n, .ar, .t) — two of which the
+    page already uses. Prefixing keeps the figure from restyling the document.
+    Handles @media by recursing into the block.
+    """
+    def sel(s):
+        out = []
+        for part in (x.strip() for x in s.split(',')):
+            if not part:
+                continue
+            # :root[data-theme] must stay at the root; the scope goes after it
+            m = re.match(r'^(:root\[[^\]]*\])\s*(.*)$', part)
+            out.append(f'{m.group(1)} {scope} {m.group(2)}'.strip() if m
+                       else f'{scope} {part}')
+        return ', '.join(out)
+
+    out, i = [], 0
+    while i < len(css):
+        b = css.find('{', i)
+        if b < 0:
+            break
+        head, d, k = css[i:b].strip(), 1, b + 1
+        while k < len(css) and d:                       # brace-match the block
+            d += (css[k] == '{') - (css[k] == '}')
+            k += 1
+        body = css[b + 1:k - 1]
+        out.append(f'{head}{{{scope_css(body, scope)}}}' if head.startswith('@')
+                   else f'{sel(head)}{{{body}}}')
+        i = k
+    return '\n'.join(out)
+
+# the flow diagram is generated from the harvest logs by make_flow_diagram.py;
+# inline it so the page stays a single self-contained file
+flow = open(site('fig', 'selection-flow.svg'), encoding='utf-8').read()
+a, b = flow.index('<style>') + 7, flow.index('</style>')
+flow = flow[:a] + scope_css(flow[a:b], '.flowfig') + flow[b:]
+
+out = (tpl.replace('<!--FLOWSVG-->', flow)
+          .replace('/*FONTS*/', fonts)
           .replace('/*DATA*/', json.dumps(payload, ensure_ascii=False, separators=(',', ':')))
           .replace('/*HARVEST*/', json.dumps(harvest, ensure_ascii=False, separators=(',', ':')))
           .replace('/*CORPUS*/', json.dumps(corpus, ensure_ascii=False, separators=(',', ':')))

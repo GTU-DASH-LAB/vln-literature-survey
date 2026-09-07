@@ -10,3 +10,8 @@ latex/*.blg
 latex/*.out
 latex/*.pdf
 .DS_Store
+
+# fetched full texts: publisher PDFs, ~1 GB, and this repository is public
+data/pdf/
+data/txt/
+data/pdf_fetch.log

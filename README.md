@@ -32,6 +32,13 @@ tools/                 the pipeline, in the order it runs
   build.py               index.html
   make_latex.py          latex/numbers.tex — corpus figures as LaTeX macros
   make_bib.py            latex/refs.bib from doi.org
+  make_bib_context.py    latex/refs_context.bib — the pre-2023 works, resolved not typed
+  clean_bib.py           makes harvested BibTeX safe for pdflatex (HTML tags, Unicode)
+  check_cites.py         every \cite resolves, nothing uncited — exits non-zero if not
+  lint_latex.py          braces, environments, tabular column counts, missing \input
+  make_flow_diagram.py   the selection diagram, from the logs: SVG for the page, TikZ for the paper
+  fetch_pdfs.py          open-access PDFs for the reading list
+  fetch_fulltext_abstracts.py  PDF -> text, so the papers can be read rather than skimmed
   fetch_seeds.py         resolves the seed list and its citation counts
 
 data/                  generated; the corpus lives here
@@ -41,15 +48,21 @@ data/                  generated; the corpus lives here
   harvest_report.json    per-source, per-set and per-phrase counts
   recall_audit.json      seed recall and what is still missing
   reading_list.{csv,json}  the papers to read
+  reading_notes.json     what each paper actually claims and reports, read from its full text
+  pdf/ txt/              the fetched open-access PDFs and their extracted text (not tracked)
 
 latex/                 the manuscript (upload this directory to Overleaf)
-  main.tex               IEEEtran skeleton: 14 sections, 9 figures, 7 tables, PRISMA in TikZ
+  main.tex               the manuscript: 14 sections, 7 tables, 20 pages
   numbers.tex            generated — every corpus figure the paper quotes
+  queries.tex            generated — the 44 search phrases, exactly as harvest.py sends them
   refs.bib               generated — the reading list, from the publishers' own records
+  refs_context.bib       generated — the pre-2023 foundational works
+  fig/selection-flow.tex generated — how 44 phrases became 98 papers, in TikZ
 
 site/                  page sources
   page.template.html     edit this, never index.html
   fonts.css + *.woff2    six subsetted faces, inlined at build time
+  fig/selection-flow.svg generated — the same diagram, inlined into the page
 ```
 
 **Start here:** [`docs/pipeline.md`](docs/pipeline.md) explains how a query string becomes a
@@ -153,10 +166,10 @@ title and abstract keywords, using the protocol's own codes. On the corpus as ha
 
 | Decision | Records | What it means |
 |---|---:|---|
-| `include` | 854 | navigation, language conditioning and visual observation all present |
-| `check` | 159 | the gate could not call it — enabler papers, missing abstracts, no stated embodiment |
-| `survey` | 61 | EC6, held back for Table I rather than the method corpus |
-| `exclude` | 1 544 | EC1–EC5, each row carrying the code that fired |
+| `include` | 861 | navigation, language conditioning and visual observation all present |
+| `check` | 167 | the gate could not call it — enabler papers, missing abstracts, no stated embodiment |
+| `survey` | 89 | EC6, held back for Table I rather than the method corpus |
+| `exclude` | 2 091 | EC1–EC7, each row carrying the code that fired |
 
 **This is a pre-screen, not screening.** A keyword gate cannot judge IC4–IC6; what it can do is
 group the obvious exclusions so the human pass starts from something ordered, and make the
@@ -165,7 +178,7 @@ preserved — `tools/screen.py` only fills empty cells.
 
 ## The reading list
 
-Two thousand records is a corpus; a survey is written from about a hundred papers.
+Three thousand records is a corpus; a survey is written from about a hundred papers.
 `tools/reading_list.py` picks them from the `include` bucket, 2024 onward, and two decisions
 in it need stating in Sec. III because they are arguable:
 
