@@ -15,3 +15,4 @@ latex/*.pdf
 data/pdf/
 data/txt/
 data/pdf_fetch.log
+data/figures/

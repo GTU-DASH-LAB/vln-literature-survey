@@ -1,0 +1,24 @@
+% Original figure. Three bands; Sec. IX is the load-bearing one.
+\begin{tikzpicture}[
+    font=\scriptsize,
+    b/.style={draw, rounded corners=1.2pt, inner sep=2.6pt, minimum height=4.6mm,
+              align=center, fill=black!3},
+    hi/.style={b, fill=black!14, very thick},
+    ar/.style={-{Latex[length=1.4mm]}, semithick}]
+
+  \node[b, text width=68mm] (found) at (0,0)
+       {\textbf{II--V} background, protocol, corpus, datasets};
+  \node[b, text width=32mm] (perc) at (-1.85,-1.05) {\textbf{VI--VII} perception};
+  \node[b, text width=32mm] (lang) at ( 1.85,-1.05) {\textbf{VIII} language};
+  \node[hi, text width=68mm] (zs)  at (0,-2.05)
+       {\textbf{IX} the zero-shot audit --- five senses, one table};
+  \node[b, text width=32mm] (ev)   at (-1.85,-3.05) {\textbf{X--XI} evaluation, robots};
+  \node[b, text width=32mm] (open) at ( 1.85,-3.05) {\textbf{XII--XIV} open problems};
+
+  \draw[ar] (found.south) -- (0,-0.45) -- (-1.85,-0.45) -- (perc.north);
+  \draw[ar] (found.south) -- (0,-0.45) -- ( 1.85,-0.45) -- (lang.north);
+  \draw[ar] (perc.south) -- (-1.85,-1.62) -- (0,-1.62) -- (zs.north);
+  \draw[semithick] (lang.south) -- ( 1.85,-1.62) -- (0,-1.62);
+  \draw[ar] (zs.south) -- (0,-2.62) -- (-1.85,-2.62) -- (ev.north);
+  \draw[ar] (zs.south) -- (0,-2.62) -- ( 1.85,-2.62) -- (open.north);
+\end{tikzpicture}

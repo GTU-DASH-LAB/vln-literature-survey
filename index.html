@@ -368,6 +368,21 @@ footer a{color:var(--ink-2)}
   color:var(--muted)}
 @media (max-width:760px){.flowfig{overflow-x:auto}
   .flowfig svg{min-width:820px}}
+
+/* reproduced figure plates */
+.plate{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 24px;margin-top:26px}
+.plate.wide{grid-template-columns:minmax(0,1fr);gap:30px}
+.plate figure{margin:0;display:flex;flex-direction:column;gap:10px}
+.plate img{width:100%;height:auto;display:block;border:1px solid var(--rule);
+  border-radius:3px;background:#fff}
+/* panel (b) is portrait and the rest landscape; cap the height so the two rows
+   line up instead of leaving a hole under the shortest panel */
+.plate:not(.wide) img{max-height:330px;object-fit:contain;padding:4px}
+.plate figcaption{font-size:.8rem;line-height:1.55;color:var(--ink-2)}
+.plate figcaption b{color:var(--ink);font-weight:600}
+.plate .lic{display:block;margin-top:5px;font-size:.72rem;color:var(--muted)}
+.plate .lic a{color:inherit}
+@media (max-width:720px){.plate{grid-template-columns:minmax(0,1fr)}}
 </style>
 
 <header class="mast">
@@ -398,6 +413,7 @@ footer a{color:var(--ink-2)}
     <a href="#glance">At a glance</a>
     <a href="#outline">Outline</a>
     <a href="#zeroshot">Zero-shot</a>
+    <a href="#architecture">Architecture</a>
     <a href="#databases">Databases</a>
     <a href="#queries">Queries</a>
     <a href="#harvest">Harvest</a>
@@ -461,6 +477,65 @@ footer a{color:var(--ink-2)}
         <p>The policy is applied to a robot, morphology or sensor suite it was never trained on.</p>
         <div class="warn"><b>Audit:</b> often the honest reason a real-robot demo is zero-shot is
           that no real-world training data exists.</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="architecture">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-node on"></span><h2 class="sec">How the architecture moved &mdash; in four pictures</h2></div>
+    <p class="sec-sub prose">The survey&rsquo;s argument is that zero-shot navigation won
+      architecturally and lost numerically. These four panels are the authors&rsquo; own drawings,
+      read in order: the reasoner starts outside the loop, becomes a perception front-end, acquires
+      a map to reason over, and is finally absorbed into a trained policy that learns when calling
+      it is worth the latency. Reproduced under the Creative Commons licences named on each panel
+      &mdash; the only papers eligible are the ones whose authors chose a CC licence on arXiv.</p>
+
+    <div class="plate">
+      <figure>
+        <img src="site/fig/arch-a-lgx.jpg" alt="LGX pipeline: observation, semantics extraction, LLM decision, motion planning, looping until the target is found" loading="lazy">
+        <figcaption><b>a &middot; R1, the reasoner is outside the loop.</b> LGX captions what the
+          camera sees, asks an LLM which of those objects to walk towards, and re-asks every step.
+          <span class="lic">Dorbala et&nbsp;al., <a href="https://arxiv.org/abs/2303.03480">arXiv:2303.03480</a> &middot; CC BY 4.0</span></figcaption>
+      </figure>
+      <figure>
+        <img src="site/fig/arch-b-navgpt2.jpg" alt="NavGPT-2 architecture: a large vision-language model feeding a separate navigation policy network" loading="lazy">
+        <figcaption><b>b &middot; R2, the model perceives and a trained policy acts.</b> The VLM
+          produces the reasoning; a graph-memory policy network chooses the action.
+          <span class="lic">Zhou et&nbsp;al., <a href="https://arxiv.org/abs/2407.12366">arXiv:2407.12366</a> &middot; CC BY-SA 4.0</span></figcaption>
+      </figure>
+      <figure>
+        <img src="site/fig/arch-c-beliefmap.jpg" alt="BeliefMapNav: a 3D voxel belief map with the agent path and per-timestep observations" loading="lazy">
+        <figcaption><b>c &middot; the map is what the reasoner writes into.</b> Language priors
+          become a 3D belief field, and the path is planned to minimise expected search cost.
+          <span class="lic">Zhou et&nbsp;al., <a href="https://arxiv.org/abs/2506.06487">arXiv:2506.06487</a> &middot; CC BY 4.0</span></figcaption>
+      </figure>
+      <figure>
+        <img src="site/fig/arch-d-omninav.jpg" alt="OmniNav fast and slow thinking systems sharing one VLM backbone" loading="lazy">
+        <figcaption><b>d &middot; R3, the policy absorbs the reasoner.</b> One VLM serves a fast
+          waypoint head and a slow deliberative pass &mdash; and the system learns how rarely the
+          slow pass is needed.
+          <span class="lic">Xue et&nbsp;al., <a href="https://arxiv.org/abs/2509.25687">arXiv:2509.25687</a> &middot; CC BY 4.0</span></figcaption>
+      </figure>
+    </div>
+
+    <div class="plate wide">
+      <figure>
+        <img src="site/fig/goals-goat.jpg" alt="A GOAT-Bench episode sequence: one apartment, seven goals given as category, photograph and referring expression" loading="lazy">
+        <figcaption><b>Why the goal specification is the harder variable.</b> One GOAT-Bench
+          episode sequence asks for the same apartment seven times &mdash; as a category
+          (<i>recliner chair</i>), as a photograph, and as a referring expression &mdash; so no agent
+          can specialise to one goal modality. This is ZS-2 measured rather than assumed.
+          <span class="lic">Khanna et&nbsp;al., <a href="https://arxiv.org/abs/2404.06609">arXiv:2404.06609</a> &middot; CC BY 4.0</span></figcaption>
+      </figure>
+      <figure>
+        <img src="site/fig/embodiment-vamos.jpg" alt="VAMOS: one VLM planner, an affordance model per robot, and a quadruped following a path through a forest" loading="lazy">
+        <figcaption><b>What ZS-5 looks like outside the simulator.</b> VAMOS keeps one
+          language-conditioned planner and swaps only the affordance model &mdash; what encodes that
+          a legged base crosses terrain a wheeled one cannot. The right-hand frame is the setting
+          the scanned indoor benchmarks do not contain.
+          <span class="lic">Castro et&nbsp;al., <a href="https://arxiv.org/abs/2510.20818">arXiv:2510.20818</a> &middot; CC BY 4.0</span></figcaption>
+      </figure>
     </div>
   </div>
 </section>

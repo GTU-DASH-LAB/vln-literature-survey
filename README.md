@@ -39,6 +39,9 @@ tools/                 the pipeline, in the order it runs
   make_flow_diagram.py   the selection diagram, from the logs: SVG for the page, TikZ for the paper
   fetch_pdfs.py          open-access PDFs for the reading list
   fetch_fulltext_abstracts.py  PDF -> text, so the papers can be read rather than skimmed
+  fetch_licenses.py      may a figure be reprinted? arXiv OAI-PMH says, per paper
+  extract_figures.py     caption-anchored figure crops, reusable papers only
+  make_web_figures.py    the same figures, downscaled for the page
   fetch_seeds.py         resolves the seed list and its citation counts
 
 data/                  generated; the corpus lives here
@@ -49,6 +52,8 @@ data/                  generated; the corpus lives here
   recall_audit.json      seed recall and what is still missing
   reading_list.{csv,json}  the papers to read
   reading_notes.json     what each paper actually claims and reports, read from its full text
+  arxiv_licenses.json    per-paper reuse verdict: reusable / restricted / no-reuse
+  figures/               caption-anchored crops (not tracked; regenerate from the PDFs)
   pdf/ txt/              the fetched open-access PDFs and their extracted text (not tracked)
 
 latex/                 the manuscript (upload this directory to Overleaf)
@@ -58,15 +63,41 @@ latex/                 the manuscript (upload this directory to Overleaf)
   refs.bib               generated — the reading list, from the publishers' own records
   refs_context.bib       generated — the pre-2023 foundational works
   fig/selection-flow.tex generated — how 44 phrases became 98 papers, in TikZ
+  fig/taxonomy.tex, zs-loop.tex, organisation.tex   original TikZ figures
+  fig/*.png, *.jpg       figures reproduced from CC-licensed papers
+  fig/CREDITS.md         what each one is, whose it is, and under which licence
 
 site/                  page sources
   page.template.html     edit this, never index.html
   fonts.css + *.woff2    six subsetted faces, inlined at build time
   fig/selection-flow.svg generated — the same diagram, inlined into the page
+  fig/*.jpg              web-sized copies of the reproduced figures
 ```
 
 **Start here:** [`docs/pipeline.md`](docs/pipeline.md) explains how a query string becomes a
 reading list, and why each step is shaped the way it is.
+
+## Reproducing figures from the papers
+
+The survey reprints figures from six of the reviewed papers. That is only legal for some
+of them, so it is decided by a script rather than by eye. `tools/fetch_licenses.py` asks
+arXiv's OAI-PMH interface for the licence of every fetched PDF — the Atom API does not
+carry the field — and sorts the answers:
+
+| Verdict | Papers | Meaning |
+|---|---:|---|
+| `reusable` | 26 | CC BY, CC BY-SA or CC0 — reproducible with attribution |
+| `restricted` | 3 | CC BY-NC-* or CC BY-ND-* — attribution is not sufficient |
+| `no-reuse` | 55 | arXiv's own non-exclusive licence, which grants no reprint right |
+
+`tools/extract_figures.py` refuses to touch anything that is not `reusable`, every
+reproduction names its licence in its own caption, and `latex/fig/CREDITS.md` lists all of
+them in one place. The verdicts are in `data/arxiv_licenses.json` and can be re-checked.
+
+Two thirds of this corpus therefore cannot be shown here at all. That is the correct
+outcome, not a limitation to work around: an IEEE submission that reprints a figure under
+arXiv's default licence needs written permission from the authors, and this repository is
+public.
 
 ## The zero-shot angle
 

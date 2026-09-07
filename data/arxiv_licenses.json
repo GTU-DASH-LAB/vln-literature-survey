@@ -1,0 +1,506 @@
+{
+ "2303.03480": {
+  "created": "2023-11-05",
+  "licence": "CC BY 4.0",
+  "licence_url": "http://creativecommons.org/licenses/by/4.0/",
+  "verdict": "reusable"
+ },
+ "2304.03047": {
+  "created": "2024-01-22",
+  "licence": "CC BY 4.0",
+  "licence_url": "http://creativecommons.org/licenses/by/4.0/",
+  "verdict": "reusable"
+ },
+ "2309.10309": {
+  "created": "2023-09-21",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2309.11382": {
+  "created": "2023-09-20",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2310.07937": {
+  "created": "2025-05-06",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2312.02010": {
+  "created": "2024-04-01",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2312.03275": {
+  "created": "2023-12-06",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2401.02695": {
+  "created": "2024-02-06",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2401.07314": {
+  "created": "2024-06-20",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2402.10670": {
+  "created": "2024-03-25",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2402.15852": {
+  "created": "2024-06-30",
+  "licence": "CC BY 4.0",
+  "licence_url": "http://creativecommons.org/licenses/by/4.0/",
+  "verdict": "reusable"
+ },
+ "2403.07376": {
+  "created": "2025-03-22",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2403.11650": {
+  "created": "2024-07-16",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2403.14158": {
+  "created": "2024-03-21",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2403.14163": {
+  "created": "2024-03-21",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2403.17846": {
+  "created": "2024-06-03",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2404.00318": {
+  "created": "2024-11-05",
+  "licence": "CC BY-NC-SA",
+  "licence_url": "http://creativecommons.org/licenses/by-nc-sa/4.0/",
+  "verdict": "restricted"
+ },
+ "2404.01943": {
+  "created": "2024-04-02",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2404.06609": {
+  "created": "2024-04-09",
+  "licence": "CC BY 4.0",
+  "licence_url": "http://creativecommons.org/licenses/by/4.0/",
+  "verdict": "reusable"
+ },
+ "2404.10241": {
+  "created": "2024-04-16",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2404.16006": {
+  "created": "2024-04-24",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2405.09822": {
+  "created": "2024-11-18",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2406.04882": {
+  "created": "2024-06-07",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2406.09798": {
+  "created": "2024-10-14",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2406.14240": {
+  "created": "2025-08-02",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2406.20083": {
+  "created": "2024-06-28",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2407.05890": {
+  "created": "2024-08-20",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2407.07775": {
+  "created": "2024-07-12",
+  "licence": "CC BY 4.0",
+  "licence_url": "http://creativecommons.org/licenses/by/4.0/",
+  "verdict": "reusable"
+ },
+ "2407.12366": {
+  "created": "2024-09-20",
+  "licence": "CC BY-SA 4.0",
+  "licence_url": "http://creativecommons.org/licenses/by-sa/4.0/",
+  "verdict": "reusable"
+ },
+ "2409.10906": {
+  "created": "2024-09-17",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2409.14296": {
+  "created": "2024-09-22",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2409.18794": {
+  "created": "2025-02-11",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2410.03603": {
+  "created": "2024-10-04",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2410.07087": {
+  "created": "2024-10-10",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2410.08189": {
+  "created": "2024-10-10",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2410.08500": {
+  "created": "2025-08-11",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2410.09874": {
+  "created": "2024-10-13",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2410.21842": {
+  "created": "2025-06-06",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2411.11609": {
+  "created": "2024-11-18",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2411.16425": {
+  "created": "2025-03-26",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2412.04453": {
+  "created": "2025-02-17",
+  "licence": "CC BY 4.0",
+  "licence_url": "http://creativecommons.org/licenses/by/4.0/",
+  "verdict": "reusable"
+ },
+ "2412.06224": {
+  "created": "2025-02-06",
+  "licence": "CC BY 4.0",
+  "licence_url": "http://creativecommons.org/licenses/by/4.0/",
+  "verdict": "reusable"
+ },
+ "2412.08591": {
+  "created": "2025-03-19",
+  "licence": "CC BY-NC-SA",
+  "licence_url": "http://creativecommons.org/licenses/by-nc-sa/4.0/",
+  "verdict": "restricted"
+ },
+ "2412.10137": {
+  "created": "2025-04-15",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2412.10439": {
+  "created": "2025-08-28",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2502.00931": {
+  "created": "2026-07-14",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2502.13451": {
+  "created": "2026-05-09",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2502.18041": {
+  "created": "2026-03-01",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2503.02247": {
+  "created": "2025-07-19",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2503.10069": {
+  "created": "2025-06-17",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2503.10630": {
+  "created": "2025-03-18",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2503.18525": {
+  "created": "2025-08-08",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2505.05622": {
+  "created": "2025-05-08",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2505.06729": {
+  "created": "2025-09-15",
+  "licence": "CC BY 4.0",
+  "licence_url": "http://creativecommons.org/licenses/by/4.0/",
+  "verdict": "reusable"
+ },
+ "2505.12835": {
+  "created": "2025-05-19",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2505.23019": {
+  "created": "2026-01-03",
+  "licence": "CC BY-SA 4.0",
+  "licence_url": "http://creativecommons.org/licenses/by-sa/4.0/",
+  "verdict": "reusable"
+ },
+ "2506.01031": {
+  "created": "2025-06-01",
+  "licence": "CC BY 4.0",
+  "licence_url": "http://creativecommons.org/licenses/by/4.0/",
+  "verdict": "reusable"
+ },
+ "2506.05020": {
+  "created": "2025-10-27",
+  "licence": "CC BY 4.0",
+  "licence_url": "http://creativecommons.org/licenses/by/4.0/",
+  "verdict": "reusable"
+ },
+ "2506.06487": {
+  "created": "2025-05-27",
+  "licence": "CC BY 4.0",
+  "licence_url": "http://creativecommons.org/licenses/by/4.0/",
+  "verdict": "reusable"
+ },
+ "2506.09839": {
+  "created": "2025-06-11",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2506.17221": {
+  "created": "2025-06-25",
+  "licence": "CC BY 4.0",
+  "licence_url": "http://creativecommons.org/licenses/by/4.0/",
+  "verdict": "reusable"
+ },
+ "2506.23468": {
+  "created": "2025-07-22",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2507.05240": {
+  "created": "2026-07-09",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2507.11334": {
+  "created": "2025-08-15",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2507.13019": {
+  "created": "2025-09-26",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2508.00288": {
+  "created": "2026-07-27",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2508.09423": {
+  "created": "2025-10-21",
+  "licence": "CC BY 4.0",
+  "licence_url": "http://creativecommons.org/licenses/by/4.0/",
+  "verdict": "reusable"
+ },
+ "2509.01364": {
+  "created": "2025-09-01",
+  "licence": "CC BY 4.0",
+  "licence_url": "http://creativecommons.org/licenses/by/4.0/",
+  "verdict": "reusable"
+ },
+ "2509.12129": {
+  "created": "2025-09-16",
+  "licence": "CC BY 4.0",
+  "licence_url": "http://creativecommons.org/licenses/by/4.0/",
+  "verdict": "reusable"
+ },
+ "2509.19480": {
+  "created": "2025-09-23",
+  "licence": "CC BY-NC-ND",
+  "licence_url": "http://creativecommons.org/licenses/by-nc-nd/4.0/",
+  "verdict": "restricted"
+ },
+ "2509.22548": {
+  "created": "2026-02-25",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2509.25687": {
+  "created": "2026-01-07",
+  "licence": "CC BY 4.0",
+  "licence_url": "http://creativecommons.org/licenses/by/4.0/",
+  "verdict": "reusable"
+ },
+ "2510.01388": {
+  "created": "2025-10-01",
+  "licence": "CC BY-SA 4.0",
+  "licence_url": "http://creativecommons.org/licenses/by-sa/4.0/",
+  "verdict": "reusable"
+ },
+ "2510.20818": {
+  "created": "2025-10-23",
+  "licence": "CC BY 4.0",
+  "licence_url": "http://creativecommons.org/licenses/by/4.0/",
+  "verdict": "reusable"
+ },
+ "2510.23576": {
+  "created": "2025-10-27",
+  "licence": "CC BY 4.0",
+  "licence_url": "http://creativecommons.org/licenses/by/4.0/",
+  "verdict": "reusable"
+ },
+ "2510.26909": {
+  "created": "2026-03-09",
+  "licence": "CC BY 4.0",
+  "licence_url": "http://creativecommons.org/licenses/by/4.0/",
+  "verdict": "reusable"
+ },
+ "2511.18112": {
+  "created": "2026-08-07",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2512.07976": {
+  "created": "2026-03-14",
+  "licence": "CC BY 4.0",
+  "licence_url": "http://creativecommons.org/licenses/by/4.0/",
+  "verdict": "reusable"
+ },
+ "2602.06427": {
+  "created": "2026-02-06",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2602.09972": {
+  "created": "2026-02-10",
+  "licence": "CC BY 4.0",
+  "licence_url": "http://creativecommons.org/licenses/by/4.0/",
+  "verdict": "reusable"
+ },
+ "2602.11598": {
+  "created": "2026-02-12",
+  "licence": "CC BY 4.0",
+  "licence_url": "http://creativecommons.org/licenses/by/4.0/",
+  "verdict": "reusable"
+ },
+ "2603.06914": {
+  "created": "2026-03-06",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ },
+ "2605.09423": {
+  "created": "2026-05-13",
+  "licence": "CC BY 4.0",
+  "licence_url": "http://creativecommons.org/licenses/by/4.0/",
+  "verdict": "reusable"
+ },
+ "2605.30280": {
+  "created": "2026-06-01",
+  "licence": "arXiv non-exclusive",
+  "licence_url": "http://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+  "verdict": "no-reuse"
+ }
+}

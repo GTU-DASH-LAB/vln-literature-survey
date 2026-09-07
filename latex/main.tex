@@ -209,7 +209,7 @@ open problems.
 
 \begin{figure}[!t]
   \centering
-  % \includegraphics[width=\columnwidth]{fig/organisation.pdf}
+  \resizebox{\columnwidth}{!}{\input{fig/organisation}}
   \caption{Organisation of the survey. Sec.~\ref{sec:zeroshot} is the
   load-bearing chapter; Secs.~\ref{sec:perception} and \ref{sec:language}
   supply the components it audits.}
@@ -616,12 +616,43 @@ cost problem.
 
 \begin{figure*}[!t]
   \centering
-  % \includegraphics[width=\textwidth]{fig/taxonomy.pdf}
+  \resizebox{\textwidth}{!}{\input{fig/taxonomy}}
   \caption{Taxonomy of foundation-model navigation methods, branching on the
   role the model plays (R1--R5). Shading encodes supervision level, which is
   orthogonal to the role axis: a single role contains training-free,
   partially trained and fully supervised instances.}
   \label{fig:taxonomy}
+\end{figure*}
+
+\begin{figure*}[!t]
+  \centering
+  \begin{tabular}{@{}p{0.485\textwidth}@{\hspace{4mm}}p{0.485\textwidth}@{}}
+    \centering\includegraphics[width=\linewidth]{fig/arch-a-lgx.png} &
+    \centering\includegraphics[width=0.94\linewidth]{fig/arch-b-navgpt2.jpg}
+    \tabularnewline[1mm]
+    \centering\footnotesize (a) R1: the reasoner is outside the loop
+      (LGX~\cite{dorbala2024embodied}) &
+    \centering\footnotesize (b) R2: the model perceives, a trained policy acts
+      (NavGPT-2~\cite{zhou2024navgpt})
+    \tabularnewline[2.5mm]
+    \centering\includegraphics[width=\linewidth]{fig/arch-c-beliefmap.png} &
+    \centering\includegraphics[width=\linewidth]{fig/arch-d-omninav.png}
+    \tabularnewline[1mm]
+    \centering\footnotesize (c) the map is what the reasoner writes into
+      (BeliefMapNav~\cite{zhou2025beliefmapnav}) &
+    \centering\footnotesize (d) R3: the policy absorbs the reasoner and learns
+      when to call it (OmniNav~\cite{xue2025omninav})
+    \tabularnewline
+  \end{tabular}
+  \caption{The taxonomy of Fig.~\ref{fig:taxonomy} in the authors' own
+  drawings. Read (a) to (d) as the argument of this survey in four pictures:
+  the reasoner begins as an external module invoked every step (a), becomes a
+  perception front-end for a trained policy (b), acquires a persistent spatial
+  substrate to reason over (c), and is finally absorbed into the policy itself,
+  which learns when the expensive process is worth running (d). Panels
+  reproduced from the cited works under CC~BY~4.0 (a, c, d) and CC~BY-SA~4.0
+  (b); see \texttt{latex/fig/CREDITS.md} in the accompanying repository.}
+  \label{fig:archetypes}
 \end{figure*}
 
 % =====================================================================
@@ -689,6 +720,19 @@ object-goal vocabulary to 379 categories, which invalidates any method
 that quietly assumes a closed label set. GOAT-Bench~\cite{khanna2024goat}
 mixes category, language and image goals within a single lifelong episode
 sequence, so an agent cannot specialise to one goal modality.
+\begin{figure*}[!t]
+  \centering
+  \includegraphics[width=0.86\textwidth]{fig/goals-goat.jpg}
+  \caption{Why the goal specification is the harder variable. A single
+  GOAT-Bench episode sequence asks for the same apartment to be navigated
+  seven times, with the goal given as a category (\emph{recliner chair}), as
+  a photograph, and as a referring expression (\emph{the white book on the
+  coffee table in the living room}) --- so an agent cannot specialise to one
+  goal modality, and open-vocabulary competence (ZS-2) is measured rather
+  than assumed. Reproduced from~\cite{khanna2024goat} under CC~BY~4.0.}
+  \label{fig:goals}
+\end{figure*}
+
 UAV-ON~\cite{xiao2025benchmark} moves open-world object-goal navigation
 into the air. NavBench~\cite{qiao2025navbench} and
 NaviTrace~\cite{windecker2025navitrace} probe multimodal LLMs directly and
@@ -1344,7 +1388,7 @@ the trained systems own the leaderboard.
 
 \begin{figure}[!t]
   \centering
-  % \includegraphics[width=\columnwidth]{fig/zs-loop.pdf}
+  \resizebox{0.95\columnwidth}{!}{\input{fig/zs-loop}}
   \caption{The canonical zero-shot navigation loop. The dashed box is the
   only training-free part of most systems audited in
   Table~\ref{tab:zsaudit}; waypoint generation and low-level control are
@@ -1528,6 +1572,19 @@ mismatch between scanned and real scenes; actuation, since a discrete
 ``turn 30 degrees'' is not what a legged or wheeled base does; sensing,
 since simulated depth is clean and real depth is not; and compute, since a
 model that runs on a workstation may not run onboard.
+
+\begin{figure*}[!t]
+  \centering
+  \includegraphics[width=\textwidth]{fig/embodiment-vamos.jpg}
+  \caption{What ``cross-embodiment'' (ZS-5) means once the agent leaves the
+  simulator. VAMOS~\cite{castro2025vamos} keeps one language-conditioned
+  planner and swaps only the affordance model, which is what encodes that a
+  legged base may cross terrain a wheeled one cannot; the plan is then
+  filtered rather than retrained. The right-hand panel is the setting the
+  scanned indoor benchmarks of Sec.~\ref{sec:data} do not contain.
+  Reproduced from~\cite{castro2025vamos} under CC~BY~4.0.}
+  \label{fig:embodiment}
+\end{figure*}
 
 \subsection{Robot Embodiments}
 The corpus covers quadrupeds~\cite{cheng2024navila,wang2026hydra,wei2025streamvln},

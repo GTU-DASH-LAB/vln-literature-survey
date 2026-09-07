@@ -1,0 +1,52 @@
+% Original figure. The role axis is the branch; supervision is the shading,
+% because a single role holds training-free and fully trained instances alike.
+\begin{tikzpicture}[
+    font=\footnotesize,
+    node distance=0pt,
+    role/.style={draw, rounded corners=1.4pt, minimum height=6.5mm,
+                 text width=27mm, align=center, font=\footnotesize\bfseries},
+    tf/.style ={draw, rounded corners=1.4pt, text width=27mm, align=center,
+                fill=white, font=\scriptsize, inner sep=2.6pt},
+    pt/.style ={tf, fill=black!8},
+    sv/.style ={tf, fill=black!20},
+    ar/.style ={-{Latex[length=1.6mm]}, semithick}]
+
+  \node[draw, rounded corners=1.4pt, minimum height=7mm, text width=54mm,
+        align=center, font=\footnotesize\bfseries]
+        (root) at (0,0) {What role does the foundation model play?};
+
+  \foreach \i/\lab/\x in {1/R1 External reasoner/-6.0, 2/R2 Perception backbone/-3.0,
+                          3/R3 The policy/0.0, 4/R4 Data engine/3.0, 5/{R5 Critic, selector}/6.0} {
+    \node[role] (r\i) at (\x,-1.5) {\lab};
+    \draw[ar] (root.south) -- (\x,-0.95) -- (r\i.north);
+  }
+
+  % leaves: the shade is the supervision level, not another branch
+  \node[tf] (l1a) at (-6.0,-2.55) {CoW, LGX\\ ESC, VLFM};
+  \node[pt] (l1b) at (-6.0,-3.45) {InstructNav\\ WMNav};
+  \node[sv] (l1c) at (-6.0,-4.30) {Hydra-Nav};
+
+  \node[tf] (l2a) at (-3.0,-2.55) {CLIP / GLIP\\ frontier scoring};
+  \node[pt] (l2b) at (-3.0,-3.45) {NavGPT-2\\ BeliefMapNav};
+  \node[sv] (l2c) at (-3.0,-4.30) {ETPNav\\ HAMT lineage};
+
+  \node[tf] (l3a) at (0.0,-2.55) {prompt-only\\ action selection};
+  \node[pt] (l3b) at (0.0,-3.45) {NaVid, Uni-NaVid\\ OmniNav};
+  \node[sv] (l3c) at (0.0,-4.30) {StreamVLN\\ NavFoM};
+
+  \node[tf] (l4a) at (3.0,-2.55) {LLM instruction\\ paraphrase};
+  \node[pt] (l4b) at (3.0,-3.45) {trajectory\\ relabelling};
+  \node[sv] (l4c) at (3.0,-4.30) {ScaleVLN\\ synthetic scenes};
+
+  \node[tf] (l5a) at (6.0,-2.55) {plan rejection\\ (VAMOS)};
+  \node[pt] (l5b) at (6.0,-3.45) {invoke-or-not\\ (SURF)};
+  \node[sv] (l5c) at (6.0,-4.30) {learned switch\\ (Hydra-Nav)};
+
+  \foreach \i in {1,...,5}{\draw[ar] (r\i.south) -- (l\i a.north);}
+
+  \node[anchor=west, font=\scriptsize] at (-7.6,-5.35)
+       {Supervision, an attribute rather than a branch:};
+  \node[tf, text width=20mm, minimum height=4mm] (k1) at (-1.15,-5.35) {training-free};
+  \node[pt, text width=24mm, minimum height=4mm] (k2) at (1.75,-5.35) {partially trained};
+  \node[sv, text width=22mm, minimum height=4mm] (k3) at (4.75,-5.35) {fully supervised};
+\end{tikzpicture}

@@ -1,0 +1,25 @@
+% Original figure. Solid = a component that was trained on navigation data;
+% dashed = the part that is genuinely training-free in the audited systems.
+\begin{tikzpicture}[
+    font=\footnotesize,
+    bx/.style={draw, rounded corners=1.4pt, align=center, inner sep=3.4pt,
+               minimum height=6.5mm, text width=21mm, fill=black!12},
+    fr/.style={bx, fill=white, dashed, draw=black!70},
+    ar/.style={-{Latex[length=1.6mm]}, semithick}]
+
+  \node[bx] (obs)  at (0,0)      {RGB-D\\ observation};
+  \node[fr] (perc) at (0,-1.35)  {open-vocabulary\\ perception};
+  \node[fr] (rea)  at (0,-2.70)  {reasoner\\ scores frontiers};
+  \node[bx] (wp)   at (0,-4.05)  {waypoint\\ predictor};
+  \node[bx] (ctrl) at (0,-5.40)  {low-level\\ controller};
+
+  \foreach \a/\b in {obs/perc, perc/rea, rea/wp, wp/ctrl} {\draw[ar] (\a) -- (\b);}
+  \draw[ar] (ctrl.east) -- (2.35,-5.40) -- (2.35,0) -- (obs.east)
+        node[midway, right, font=\scriptsize, align=left, xshift=-2.3cm, yshift=0cm] {};
+  \node[font=\scriptsize, align=center, anchor=west] at (2.5,-2.70) {the\\ environment\\ closes\\ the loop};
+
+  \draw[dashed, draw=black!70, rounded corners=2pt]
+        ($(perc.north west)+(-0.28,0.22)$) rectangle ($(rea.south east)+(0.28,-0.22)$);
+  \node[font=\scriptsize, anchor=east, align=right] at (-1.6,-2.02)
+       {training-free\\ in most\\ audited\\ systems};
+\end{tikzpicture}
