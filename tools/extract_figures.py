@@ -11,7 +11,7 @@ Only papers that `fetch_licenses.py` marked `reusable` are touched; everything
 else is skipped by name, so a restricted figure cannot reach the manuscript by
 accident.
 
-    python3 tools/extract_figures.py            # every reusable paper, figures 1-3
+    python3 tools/extract_figures.py            # every reusable paper, figures 1-8
     python3 tools/extract_figures.py 2303.03480 # one paper, all its figures
 """
 import json, os, re, subprocess, sys, xml.etree.ElementTree as ET
@@ -62,7 +62,7 @@ def trim(im, tol=6):
     return im.crop((max(0, bb[0] - 6), max(0, bb[1] - 6),
                     min(im.width, bb[2] + 6), min(im.height, bb[3] + 6))) if bb else im
 
-def extract(aid, want=(1, 2, 3)):
+def extract(aid, want=range(1, 9)):
     pdf = os.path.join(PDF, aid + ".pdf")
     made = []
     for pno, w, h, lines in pages(pdf):
@@ -71,9 +71,15 @@ def extract(aid, want=(1, 2, 3)):
             if not m or int(m.group(2)) not in want:
                 continue
             x0, x1 = column(ln, w)
+            # Walking up from the caption, stop at *body text* -- not at the labels
+            # printed inside the figure, which pdftotext also reports as lines and
+            # which would otherwise clip the crop to the last annotation.
             top = 0.05 * h
-            for prev in lines[:i]:                   # the nearest text above, same column
-                if prev["y1"] < ln["y0"] - 4 and prev["x1"] > x0 and prev["x0"] < x1:
+            for prev in lines[:i]:
+                if not (prev["y1"] < ln["y0"] - 4 and prev["x1"] > x0 and prev["x0"] < x1):
+                    continue
+                wide = (prev["x1"] - prev["x0"]) > 0.55 * (x1 - x0)
+                if wide and len(prev["text"]) > 40:
                     top = max(top, prev["y1"] + 5)
             if ln["y0"] - top < 55:                  # too thin to be a figure: a wrapped caption
                 continue

@@ -378,6 +378,8 @@ footer a{color:var(--ink-2)}
 /* panel (b) is portrait and the rest landscape; cap the height so the two rows
    line up instead of leaving a hole under the shortest panel */
 .plate:not(.wide) img{max-height:330px;object-fit:contain;padding:4px}
+/* the topological-map panel is portrait; 330px leaves it unreadable */
+.plate.tall img{max-height:470px}
 .plate figcaption{font-size:.8rem;line-height:1.55;color:var(--ink-2)}
 .plate figcaption b{color:var(--ink);font-weight:600}
 .plate .lic{display:block;margin-top:5px;font-size:.72rem;color:var(--muted)}
@@ -483,13 +485,17 @@ footer a{color:var(--ink-2)}
 
 <section id="architecture">
   <div class="wrap">
-    <div class="sec-head"><span class="sec-node on"></span><h2 class="sec">How the architecture moved &mdash; in four pictures</h2></div>
+    <div class="sec-head"><span class="sec-node on"></span><h2 class="sec">How the architecture moved &mdash; in fourteen pictures</h2></div>
     <p class="sec-sub prose">The survey&rsquo;s argument is that zero-shot navigation won
-      architecturally and lost numerically. These four panels are the authors&rsquo; own drawings,
-      read in order: the reasoner starts outside the loop, becomes a perception front-end, acquires
-      a map to reason over, and is finally absorbed into a trained policy that learns when calling
-      it is worth the latency. Reproduced under the Creative Commons licences named on each panel
-      &mdash; the only papers eligible are the ones whose authors chose a CC licence on arXiv.</p>
+      architecturally and lost numerically. Every panel below is a drawing from one of
+      the reviewed papers, grouped by the part of the argument it carries. Reproduced under the
+      Creative Commons licences named on each panel &mdash; the only papers eligible are the ones
+      whose authors chose a CC licence on arXiv, which is 26 of the 84 we fetched.</p>
+
+    <h3 class="sub">The four-step move</h3>
+    <p class="sec-sub prose">Read a&nbsp;to&nbsp;d in order: the reasoner starts outside the loop,
+      becomes a perception front-end, acquires a map to reason over, and is finally absorbed into a
+      trained policy that learns when calling it is worth the latency.</p>
 
     <div class="plate">
       <figure>
@@ -519,6 +525,8 @@ footer a{color:var(--ink-2)}
       </figure>
     </div>
 
+    <h3 class="sub">Why the goal, and the body, are the hard variables</h3>
+
     <div class="plate wide">
       <figure>
         <img src="site/fig/goals-goat.jpg" alt="A GOAT-Bench episode sequence: one apartment, seven goals given as category, photograph and referring expression" loading="lazy">
@@ -535,6 +543,106 @@ footer a{color:var(--ink-2)}
           a legged base crosses terrain a wheeled one cannot. The right-hand frame is the setting
           the scanned indoor benchmarks do not contain.
           <span class="lic">Castro et&nbsp;al., <a href="https://arxiv.org/abs/2510.20818">arXiv:2510.20818</a> &middot; CC BY 4.0</span></figcaption>
+      </figure>
+    </div>
+
+    <h3 class="sub">What the agent actually gets</h3>
+    <p class="sec-sub prose">Two figures that settle arguments the tables cannot: what a deployed
+      agent&rsquo;s observation really looks like, and what a topological memory buys the model that
+      reasons over it.</p>
+
+    <div class="plate tall">
+      <figure>
+        <img src="site/fig/video-navid.jpg" alt="NaVid: a third-person view of a robot trajectory through an office above the monocular video frames the agent receives" loading="lazy">
+        <figcaption><b>The monocular setting, in a real office.</b> The upper panel is the
+          trajectory as an observer sees it; the lower strip is everything the agent receives
+          &mdash; one forward RGB stream, no depth, no map, no odometry, no panorama. R2R&rsquo;s
+          panoramic convention hides exactly this.
+          <span class="lic">Zhang et&nbsp;al., <a href="https://arxiv.org/abs/2402.15852">arXiv:2402.15852</a> &middot; CC BY 4.0</span></figcaption>
+      </figure>
+      <figure>
+        <img src="site/fig/scene-toponav.jpg" alt="TopoNav: a topological memory map over an apartment scan, with nodes, frontiers and two candidate next waypoints" loading="lazy">
+        <figcaption><b>A memory the reasoner can read.</b> Each node carries a room type, the
+          objects seen there and the frontiers it still has. Without it the model re-enters an
+          explored bedroom (red); with it, the same model routes to the unexplored frontiers of
+          node&nbsp;5 (green). The failure being repaired is memory, not perception.
+          <span class="lic">Liu et&nbsp;al., <a href="https://arxiv.org/abs/2509.01364">arXiv:2509.01364</a> &middot; CC BY 4.0</span></figcaption>
+      </figure>
+    </div>
+
+    <h3 class="sub">Where the training data comes from</h3>
+
+    <div class="plate wide">
+      <figure>
+        <img src="site/fig/datagen-simworld.jpg" alt="SimWorld Studio: a code-writing model generates a scene, a multimodal verifier scores it against a rubric, and the loop repeats" loading="lazy">
+        <figcaption><b>The data engine, closed into a loop.</b> A code-writing model turns a prompt
+          into a scene; a multimodal verifier scores the render against an explicit rubric &mdash;
+          visual quality, layout coherence, physical plausibility, diversity &mdash; and the scene is
+          regenerated until it passes. Both the author and the critic of the training data are
+          foundation models, which is what makes the blind-spot question structural.
+          <span class="lic">Kang et&nbsp;al., <a href="https://arxiv.org/abs/2605.09423">arXiv:2605.09423</a> &middot; CC BY 4.0</span></figcaption>
+      </figure>
+    </div>
+
+    <h3 class="sub">How rarely you can afford to think</h3>
+
+    <div class="plate wide">
+      <figure>
+        <img src="site/fig/hydra-dualprocess.jpg" alt="Hydra-Nav: a fast system emitting low-level actions and a slow reasoning system invoked on a small fraction of steps" loading="lazy">
+        <figcaption><b>The 3.0% figure, drawn.</b> A fast system emits low-level actions (green)
+          from the current view; the slow system reasons over long-term memory (red) only when the
+          agent decides it must, and the context is cleared at each switch. The deliberation that
+          defined the 2023&ndash;2024 zero-shot agents survives here as a subroutine invoked on
+          3.0% of steps.
+          <span class="lic">Wang et&nbsp;al., <a href="https://arxiv.org/abs/2602.09972">arXiv:2602.09972</a> &middot; CC BY 4.0</span></figcaption>
+      </figure>
+    </div>
+
+    <h3 class="sub">What the leaderboards do not measure</h3>
+
+    <div class="plate wide">
+      <figure>
+        <img src="site/fig/eval-navitrace.jpg" alt="NaviTrace: street scenes with annotated human and model trajectories, and a leaderboard where a human expert scores 75.04 and the best model 34.55" loading="lazy">
+        <figcaption><b>The gap that success rate hides.</b> NaviTrace scores a model&rsquo;s
+          proposed trajectory against human demonstrations across a thousand scenes, each annotated
+          with the constraint it tests &mdash; accessibility, geometric terrain, social norms. The
+          best multimodal model reaches 34.55 against a human expert&rsquo;s 75.04, and every model
+          listed reports high success on threshold-based indoor benchmarks.
+          <span class="lic">Windecker et&nbsp;al., <a href="https://arxiv.org/abs/2510.26909">arXiv:2510.26909</a> &middot; CC BY 4.0</span></figcaption>
+      </figure>
+    </div>
+
+    <h3 class="sub">And what deployment adds</h3>
+
+    <div class="plate wide">
+      <figure>
+        <img src="site/fig/deploy-navila.jpg" alt="NaVILA: a vision-language model emitting a mid-level command that a separate locomotion policy turns into joint positions for a quadruped" loading="lazy">
+        <figcaption><b>Two levels, two training sets.</b> The vision-language model reads the
+          instruction with current and history views and emits a mid-level command in plain language
+          (<i>move forward 75&nbsp;cm</i>); a separate locomotion policy, running far faster on
+          proprioception and a height map, turns it into joint positions. The foundation model never
+          produces a torque &mdash; which is why &ldquo;trained&rdquo; and
+          &ldquo;training-free&rdquo; are properties of a layer, not of a system.
+          <span class="lic">Cheng et&nbsp;al., <a href="https://arxiv.org/abs/2412.04453">arXiv:2412.04453</a> &middot; CC BY 4.0</span></figcaption>
+      </figure>
+    </div>
+
+    <div class="plate">
+      <figure>
+        <img src="site/fig/deploy-urbanvla.jpg" alt="UrbanVLA: a quadruped carrying GPS, a Jetson Orin, a 5G modem and cameras, beside an operator console" loading="lazy">
+        <figcaption><b>The parts a benchmark episode has no name for.</b> UrbanVLA names the
+          compute, the localisation and the network link as first-class components &mdash; and adds
+          an operator console with start, stop, crash and fail, for which no simulator episode has
+          an analogue.
+          <span class="lic">Li et&nbsp;al., <a href="https://arxiv.org/abs/2510.23576">arXiv:2510.23576</a> &middot; CC BY 4.0</span></figcaption>
+      </figure>
+      <figure>
+        <img src="site/fig/deploy-navfom.jpg" alt="NavFoM: inputs from a wheeled base, a drone, a quadruped and a surround-view car tokenised into one navigation foundation model" loading="lazy">
+        <figcaption><b>One set of weights, four action spaces.</b> NavFoM tokenises instruction and
+          observation identically for a wheeled base, a drone, a quadruped and a surround-view car.
+          This is the concrete form ZS-5 takes once cross-embodiment stops being a claim and becomes
+          an input format.
+          <span class="lic">Zhang et&nbsp;al., <a href="https://arxiv.org/abs/2509.12129">arXiv:2509.12129</a> &middot; CC BY 4.0</span></figcaption>
       </figure>
     </div>
   </div>

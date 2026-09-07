@@ -627,16 +627,16 @@ cost problem.
 \begin{figure*}[!t]
   \centering
   \begin{tabular}{@{}p{0.485\textwidth}@{\hspace{4mm}}p{0.485\textwidth}@{}}
-    \centering\includegraphics[width=\linewidth]{fig/arch-a-lgx.png} &
-    \centering\includegraphics[width=0.94\linewidth]{fig/arch-b-navgpt2.jpg}
+    \centering\includegraphics[width=0.972\linewidth]{fig/arch-a-lgx.png} &
+    \centering\includegraphics[width=0.913\linewidth]{fig/arch-b-navgpt2.jpg}
     \tabularnewline[1mm]
     \centering\footnotesize (a) R1: the reasoner is outside the loop
       (LGX~\cite{dorbala2024embodied}) &
     \centering\footnotesize (b) R2: the model perceives, a trained policy acts
       (NavGPT-2~\cite{zhou2024navgpt})
-    \tabularnewline[2.5mm]
-    \centering\includegraphics[width=\linewidth]{fig/arch-c-beliefmap.png} &
-    \centering\includegraphics[width=\linewidth]{fig/arch-d-omninav.png}
+    \tabularnewline[1.5mm]
+    \centering\includegraphics[width=0.972\linewidth]{fig/arch-c-beliefmap.png} &
+    \centering\includegraphics[width=0.972\linewidth]{fig/arch-d-omninav.png}
     \tabularnewline[1mm]
     \centering\footnotesize (c) the map is what the reasoner writes into
       (BeliefMapNav~\cite{zhou2025beliefmapnav}) &
@@ -702,12 +702,28 @@ evaluation instructions are drawn from the same generator family, the
 benchmark measures agreement with the generator rather than with human
 language use.
 
+\begin{figure*}[!t]
+  \centering
+  \includegraphics[width=0.92\textwidth]{fig/datagen-simworld.jpg}
+  \caption{The R4 role closed into a loop. A code-writing model turns a text
+  prompt into a scene, the render is scored by a multimodal verifier against
+  an explicit rubric --- visual quality, layout coherence, physical
+  plausibility, diversity --- and the scene is regenerated until it passes,
+  after which an embodied agent is asked to act in it. Both the author and
+  the critic of the training data are foundation models, which is what makes
+  the inheritance question of Sec.~\ref{sec:challenges} structural rather
+  than a matter of data volume. Reproduced from~\cite{kang2026simworld}
+  under CC~BY~4.0.}
+  \label{fig:datagen}
+\end{figure*}
+
 \subsection{Data Augmentation and Synthetic Environments}
 Three strategies appear. Instruction augmentation generates new language for
 existing trajectories. Trajectory augmentation samples new paths through
 existing scenes, which is how the largest corpora above are built. Scene
 augmentation generates the environments themselves;
-SimWorld Studio~\cite{kang2026simworld} automates environment generation,
+SimWorld Studio~\cite{kang2026simworld} automates environment generation
+with a multimodal verifier in the loop (Fig.~\ref{fig:datagen}),
 and RoomTour3D~\cite{han2025roomtour} takes the opposite route of mining
 real video tours for geometry-aware instruction data. The open question,
 stated in Sec.~\ref{sec:challenges}, is whether policies trained
@@ -798,12 +814,24 @@ segmentation~\cite{kirillov2023segment} supply localisation; AO-Planner's
 affordance-grounded waypoints~\cite{chen2024affordances} are built on the
 latter.
 
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=\columnwidth]{fig/video-navid.jpg}
+  \caption{The monocular setting, in a real office rather than a scan. The
+  upper panel is the trajectory as an observer sees it; the lower strip is
+  everything the agent receives --- one forward-facing RGB video stream,
+  with no depth, no map, no odometry and no panorama.
+  NaVid~\cite{zhang2024navid} consumes that strip directly. Reproduced
+  from~\cite{zhang2024navid} under CC~BY~4.0.}
+  \label{fig:navid}
+\end{figure}
+
 \subsection{Panoramic versus Monocular Observation}
 The panoramic assumption inherited from R2R is convenient and unphysical.
 It supplies, at every step, a complete view of the local surroundings that a
 forward-facing robot camera does not have. Systems designed for deployment
 are consequently monocular: NaVid~\cite{zhang2024navid} takes a monocular
-video stream, and NavFoM~\cite{zhang2025embodied} reports the size of the
+video stream (Fig.~\ref{fig:navid}), and NavFoM~\cite{zhang2025embodied} reports the size of the
 difference directly, with success falling from 64.4\% in a multi-camera
 configuration to 57.4\% with a single camera on VLN-CE RxR. Any comparison
 that places panoramic and monocular agents in the same table without marking
@@ -825,6 +853,21 @@ spatiality; ablating the spatial memory drops SPL from 49.2 to 40.9, which
 is a large effect for a component that is often folded into a single
 feature stream.
 
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=\columnwidth]{fig/scene-toponav.jpg}
+  \caption{What a topological memory buys the reasoner. Each node carries a
+  room type, the objects observed there and the number of frontiers it still
+  has, so the prompt states where the agent has already been. Without that
+  memory (upper text box) the model reasons from the current view alone and
+  re-enters an explored bedroom (red waypoint); with it, the same model
+  notes that the bedroom node held no bathroom and routes to the unexplored
+  frontiers of node~5 (green waypoint). The failure being repaired is not
+  perception but memory. Reproduced from~\cite{liu2025toponav} under
+  CC~BY~4.0.}
+  \label{fig:toponav}
+\end{figure}
+
 \subsection{Map Representations}
 Five families appear, in rough order of increasing structure. \emph{Metric
 semantic maps} project detections into a 2D grid. \emph{Value maps} score
@@ -832,7 +875,8 @@ each cell or frontier by its relevance to the
 goal~\cite{yokoyama2024vlfm,long2024instructnav,chen2025constraint}.
 \emph{Topological graphs} store viewpoints and their
 connectivity~\cite{an2025etpnav,liu2025toponav}, which is what makes
-backtracking expressible. \emph{Sparse geometric abstractions} such as the
+backtracking expressible and what lets the reasoner see its own history
+(Fig.~\ref{fig:toponav}). \emph{Sparse geometric abstractions} such as the
 Voronoi graph~\cite{wu2024voronav} reduce the map to a decision skeleton
 that fits in a prompt. \emph{Volumetric belief representations} carry
 uncertainty explicitly; BeliefMapNav~\cite{zhou2025beliefmapnav} maintains a
@@ -1012,13 +1056,29 @@ generator could produce, and their open-vocabulary behaviour is bounded by
 the diversity of the generated instruction set rather than by the backbone's
 own vocabulary.
 
+\begin{figure*}[!t]
+  \centering
+  \includegraphics[width=\textwidth]{fig/deploy-navila.jpg}
+  \caption{The two-level structure shared by every deployed VLA in the
+  corpus. NaVILA~\cite{cheng2024navila} reads the instruction together with
+  the current and history views and emits a mid-level command in natural
+  language (\emph{move forward 75\,cm}); a separate locomotion policy,
+  running far faster on proprioception and a local height map, turns that
+  command into joint positions. The foundation model never produces a
+  torque, and the two levels are trained on different data --- which is why
+  ``trained'' and ``training-free'' are properties of a layer rather than of
+  a system (Sec.~\ref{sec:zs-defs}). Reproduced from~\cite{cheng2024navila}
+  under CC~BY~4.0.}
+  \label{fig:navila}
+\end{figure*}
+
 \subsection{Hierarchical and Modular Learned Systems}
 Splitting the stack by time constant is the standard response to the cost
 of running a large model in a control loop.
 NaVILA~\cite{cheng2024navila} separates a VLA level emitting mid-level
 language actions from a reinforcement-learned locomotion level that
-executes them, which is what allows the same policy to drive a legged
-robot. OmniNav~\cite{xue2025omninav} uses a fast--slow decomposition to hold
+executes them (Fig.~\ref{fig:navila}), which is what allows the same policy
+to drive a legged robot. OmniNav~\cite{xue2025omninav} uses a fast--slow decomposition to hold
 a 5\,Hz control rate. Hydra-Nav~\cite{wang2026hydra} makes the switch
 adaptive and learned, invoking the slow deliberative process only at
 stagnation points; it reduces the reasoning ratio to 3.0\% of steps while
@@ -1306,6 +1366,20 @@ DAR~\cite{xie2026diffusion} replaces language-space reasoning with
 diffusion over the semantic map --- the first clear instance in the corpus
 of reasoning that is not text-mediated.
 
+\begin{figure*}[!t]
+  \centering
+  \includegraphics[width=\textwidth]{fig/hydra-dualprocess.jpg}
+  \caption{The 3.0\% figure, drawn. A fast system emits low-level actions
+  (green) from the current view; the slow system reasons over long-term
+  memory (red) only when the agent decides it must, and the context is
+  cleared at each switch. Memory is written back as text plus a landmark
+  image rather than carried in the prompt, which is what keeps the slow
+  path affordable. The deliberation that defined the 2023--2024 zero-shot
+  agents survives here as a subroutine invoked on 3.0\% of steps.
+  Reproduced from~\cite{wang2026hydra} under CC~BY~4.0.}
+  \label{fig:hydra}
+\end{figure*}
+
 \subsection{The Middle Ground and the Convergence}\label{sec:middle}
 The interesting systems in 2025--2026 are not at either pole. Three
 movements are visible in the corpus, and together they are the central
@@ -1328,8 +1402,8 @@ demonstrated that one system can serve several goal types; the generalist
 VLAs then implemented that unification with training data behind it.
 
 \emph{Invocation frequency has become the design variable.}
-Hydra-Nav~\cite{wang2026hydra} learns when to think, reducing the reasoning
-ratio to 3.0\% of steps; SURF~\cite{shinnick2026surf} triggers on
+Hydra-Nav~\cite{wang2026hydra} learns when to think (Fig.~\ref{fig:hydra}),
+reducing the reasoning ratio to 3.0\% of steps; SURF~\cite{shinnick2026surf} triggers on
 uncertainty; OmniNav~\cite{xue2025omninav} holds 5\,Hz with a fast--slow
 split; asynchronous speculative decoding cuts end-to-end latency from
 1581\,ms to 353\,ms~\cite{feng2026asynchronous}. The question has moved from
@@ -1500,12 +1574,26 @@ such, rather than assembled row-by-row from each paper's own abstract. We
 recommend this practice generally; the alternative silently manufactures
 comparisons that no experiment supports.
 
+\begin{figure*}[!t]
+  \centering
+  \includegraphics[width=0.86\textwidth]{fig/eval-navitrace.jpg}
+  \caption{The gap that success rate hides. NaviTrace scores a model's
+  proposed trajectory against human demonstrations across a thousand scenes,
+  each annotated with the constraint it tests --- accessibility, geometric
+  terrain, social norms --- rather than against a distance threshold. The
+  best multimodal model on the leaderboard reaches 34.55 against a human
+  expert's 75.04, and every model listed is one that reports high success on
+  the indoor benchmarks of Sec.~\ref{sec:eval}. Reproduced
+  from~\cite{windecker2025navitrace} under CC~BY~4.0.}
+  \label{fig:navitrace}
+\end{figure*}
+
 \subsection{The Human Performance Gap}
 Success rate against a threshold flatters agents, because it does not ask
 whether the trajectory resembles what a person would do.
 NaviTrace~\cite{windecker2025navitrace} measures the residual gap to human
 navigation directly and finds it substantial across models that report high
-task success. This is the most useful corrective in the corpus to the
+task success (Fig.~\ref{fig:navitrace}). This is the most useful corrective in the corpus to the
 impression, given by leaderboards, that indoor navigation is nearly solved.
 
 \subsection{Beyond Success Rate}
@@ -1617,9 +1705,31 @@ invocation~\cite{chen2025constraint} and Hydra-Nav's learned
 switching~\cite{wang2026hydra} are the significant architectural moves of
 2026 rather than incremental efficiency work.
 
+\begin{figure*}[!t]
+  \centering
+  \begin{tabular}{@{}p{0.485\textwidth}@{\hspace{4mm}}p{0.485\textwidth}@{}}
+    \centering\includegraphics[height=62mm]{fig/deploy-urbanvla.jpg} &
+    \centering\includegraphics[height=62mm]{fig/deploy-navfom.jpg}
+    \tabularnewline[1mm]
+    \centering\footnotesize (a) The parts a benchmark episode has no name for
+      (UrbanVLA~\cite{li2025urbanvla}) &
+    \centering\footnotesize (b) One set of weights, four action spaces
+      (NavFoM~\cite{zhang2025embodied})
+  \end{tabular}
+  \caption{What deployment adds that Table~\ref{tab:realrobot} cannot show.
+  (a)~UrbanVLA names the compute, the localisation and the network link as
+  first-class components, and adds an operator console --- start, stop,
+  crash, fail --- that no simulator episode has an analogue for.
+  (b)~NavFoM tokenises instruction and observation identically for a wheeled
+  base, a drone, a quadruped and a surround-view car, which is the concrete
+  form ZS-5 takes. Reproduced from~\cite{li2025urbanvla}
+  and~\cite{zhang2025embodied} under CC~BY~4.0.}
+  \label{fig:deploy}
+\end{figure*}
+
 \subsection{Reported Deployments}
-Table~\ref{tab:realrobot} lists deployments reported in the corpus. Note the
-pattern: a large share of the real-robot demonstrations are zero-shot
+Table~\ref{tab:realrobot} lists deployments reported in the corpus and
+Fig.~\ref{fig:deploy} shows two of them. Note the pattern: a large share of the real-robot demonstrations are zero-shot
 precisely \emph{because} no real-world training data exists for the target
 environment. Zero-shot navigation is not primarily competing with
 supervised navigation on benchmarks; it is the only available option in the
