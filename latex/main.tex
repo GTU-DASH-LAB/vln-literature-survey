@@ -19,8 +19,12 @@
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
 \usepackage{amsmath,amssymb}
+\usepackage{array}
 \usepackage{booktabs}
 \usepackage{multirow}
+% ragged-right text column: justified text in a 2cm column stretches its
+% spaces until "Ieong and Tang" breaks into three pieces.
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 \usepackage{url}
 \usepackage[hidelinks]{hyperref}
 \usepackage{tikz}
@@ -84,7 +88,7 @@ it must ground that instruction in what its camera sees, and it must act
 under partial observability in a building it has never entered.
 Vision-and-Language Navigation (VLN) is the research programme that isolates this
 conjunction. Since its formulation on the Room-to-Room (R2R)
-benchmark~\cite{anderson2017vision}, VLN has been the canonical setting in
+benchmark~\cite{anderson2018vision}, VLN has been the canonical setting in
 which language, perception and sequential decision-making are forced to
 meet.
 
@@ -92,7 +96,7 @@ meet.
 For most of its history VLN progressed by supervision. Agents were trained
 on tens of thousands of human-annotated instruction--trajectory pairs,
 first with recurrent cross-modal
-attention~\cite{hong2020vln}, then with history-aware
+attention~\cite{hong2021recurrent}, then with history-aware
 transformers~\cite{chen2021history} and topological graph
 policies~\cite{chen2022think}. This paradigm produced steady gains on
 held-out environments, but it inherited two structural limits. The
@@ -105,7 +109,7 @@ containing one.
 Foundation models remove both bounds at their source. A contrastively
 pretrained image--text encoder~\cite{radford2021learning} scores an
 arbitrary noun phrase against an arbitrary image; an open-set
-detector~\cite{liu2023grounding} localises it; a large language model
+detector~\cite{liu2024grounding} localises it; a large language model
 supplies the commonsense prior that a kettle is more likely in a kitchen
 than a bathroom. The consequence for navigation is not incremental. It
 makes it possible to assemble a competent agent from components none of
@@ -115,7 +119,7 @@ which were trained to navigate.
 The window this survey covers, 2023 to 2026, contains the whole arc of that
 possibility being tested. The early entries treat the language model as an
 external reasoner queried over a verbalised
-scene~\cite{zhou2023navgpt,dorbala2022clip}; by 2024 the interface has
+scene~\cite{zhou2024navgpta,dorbala2022clip}; by 2024 the interface has
 matured into structured intermediate representations --- value
 maps~\cite{yokoyama2024vlfm}, Voronoi
 graphs~\cite{wu2024voronav}, online 3D scene
@@ -142,7 +146,7 @@ systems and are now standard components of trained generalists.
 We cover camera-based navigation agents that consume natural-language goals
 and are built on, or evaluated against, large language and vision-language
 models, published from January 2023 onward. We include discrete-graph VLN
-(R2R, RxR~\cite{ku2020room}, REVERIE~\cite{qi2019reverie},
+(R2R, RxR~\cite{ku2020room}, REVERIE~\cite{qi2020reverie},
 SOON~\cite{zhu2021soon}, CVDN~\cite{thomason2019vision}), continuous VLN
 (VLN-CE~\cite{krantz2020beyond}), object- and instance-goal navigation
 where the goal is expressed in open vocabulary, demand-driven navigation,
@@ -159,17 +163,35 @@ HM3D-OVON~\cite{yokoyama2024ovon} and GOAT-Bench~\cite{khanna2024goat}
 in-scope and their closed-vocabulary predecessors out of scope.
 
 \subsection{Comparison with Existing Surveys}
-Table~\ref{tab:surveys} positions this article against the prior reviews
-our screening identified. Two gaps recur. First, existing surveys organise
-by \emph{task} (R2R, ObjectNav, dialogue navigation) or by \emph{model
-family} (transformer, LLM, VLA), which places training-free and supervised
-systems that solve the same problem in different chapters and makes them
-impossible to compare. We organise by the agent's \emph{architectural
-role for the foundation model} and treat supervision level as an orthogonal
-attribute. Second, and more consequentially, no prior review audits the
-zero-shot claim itself. The term is used in at least five mutually
-incompatible senses in this literature, and papers routinely compare
-against each other across that gap.
+Table~\ref{tab:surveys} positions this article against the seven prior
+reviews whose scope overlaps ours and whose full text we read. Their
+organising axes differ, but they share a shape: each cuts the field along a
+\emph{pipeline} or \emph{system-hierarchy} dimension --- which stage of
+processing, which level of the control stack, which inference domain. That
+choice is defensible and it is not ours, because it makes the property this
+survey is about invisible: two systems occupying the same stage can differ
+by eight million training samples, and no cell in those taxonomies records
+it. We organise by the \emph{architectural role} the foundation model plays
+(R1--R5) and encode supervision as an orthogonal attribute, so the two
+questions stay separable.
+
+Second, and more consequentially, no prior review audits the zero-shot
+claim. Two of the seven make ``zero-shot'' a category heading --- a class
+of method alongside end-to-end and modular ones --- which inherits the
+ambiguity rather than resolving it; the rest use the term in passing, and
+one does not use it at all. It carries at least five mutually incompatible
+senses in this literature (Sec.~\ref{sec:zs-defs}), and papers routinely
+compare against each other across that gap.
+
+One prior survey should be named rather than counted.
+Wang \emph{et al.}~\cite{wang2026comprehensive} is the only review in
+Table~\ref{tab:surveys} that measures rather than describes: it tabulates
+training compute per system and runs its own real-robot evaluation over ten
+scenes, where a monolithic method scoring 61\% in simulation reaches 22\% in
+the real world against 51\% for a hierarchical one. That is the kind of
+evidence this article argues the field is short of, and
+Sec.~\ref{sec:real} reads it alongside the deployments the corpus itself
+reports.
 
 \subsection{Contributions}
 \begin{enumerate}
@@ -211,29 +233,65 @@ open problems.
   \centering
   \resizebox{\columnwidth}{!}{\input{fig/organisation}}
   \caption{Organisation of the survey. Sec.~\ref{sec:zeroshot} is the
-  load-bearing chapter; Secs.~\ref{sec:perception} and \ref{sec:language}
+  load-bearing chapter; Secs.~\ref{sec:perception}--\ref{sec:policies}
   supply the components it audits.}
   \label{fig:organisation}
 \end{figure}
 
 \begin{table*}[!t]
-  \caption{Prior surveys of vision-and-language and embodied navigation,
-  and what this article adds. ``ZS audit'' asks whether the survey
-  distinguishes the senses of ``zero-shot'' rather than reporting the
-  claim as stated.}
+  \caption{Prior surveys of vision-and-language and embodied navigation, and
+  what this article adds. Screening routed \ScrSurvey{} records to
+  \emph{survey}; listed here are the seven in scope whose full text we read,
+  because a comparison table must not assert what a survey omits on the
+  strength of its abstract. ``ZS audit'': does the survey distinguish the
+  senses in which its sources use ``zero-shot'', rather than repeat the claim
+  or use it as a method label? ``Cost'': is compute, latency or
+  foundation-model-call count an axis of comparison rather than a future-work
+  remark?}
   \label{tab:surveys}
   \centering
-  \setlength{\tabcolsep}{3pt}
-  \begin{tabular}{llccccl}
+  \footnotesize
+  \setlength{\tabcolsep}{3.5pt}
+  \begin{tabular}{@{}L{2.15cm}cL{2.0cm}L{3.85cm}L{2.25cm}L{2.05cm}L{2.55cm}@{}}
     \toprule
-    Survey & Year & Window & Organising axis & ZS audit & Cost/latency &
-    Real-robot evidence \\
+    Survey & Year & Scope & Organising axis & ZS audit & Cost & Real-robot
+    evidence \\
     \midrule
-    \multicolumn{7}{c}{\itshape To be completed from the \ScrSurvey{}
-    survey records held aside during screening.} \\
+    Lin \emph{et al.}~\cite{lin2023advances} & 2023 &
+      Embodied navigation with LLMs &
+      Role of the LLM: grounded understanding vs.\ few-shot planning &
+      No & Named as a challenge & --- \\
+    Zhang \emph{et al.}~\cite{zhang2024vision} & 2024 & VLN &
+      Top-down: world model, human model, agent model &
+      No & --- & Narrative, not tabulated \\
+    Ma \emph{et al.}~\cite{ma2024survey} & 2024 &
+      VLA across embodied tasks &
+      System hierarchy: low-level control policy vs.\ high-level planner &
+      No & Narrative & Datasets and benchmarks \\
+    Ieong and Tang~\cite{ieong2025multimodal} & 2025 &
+      Goal-oriented navigation &
+      Inference domain: what the agent reasons over &
+      Used as a method class & --- & --- \\
+    Xiong \emph{et al.}~\cite{xiong2025sensing} & 2025 &
+      Embodied navigation &
+      TOFRA pipeline stage: transition, observation, fusion, reward, action &
+      No & FLOPs listed among metrics & --- \\
+    Wang \emph{et al.}~\cite{wang2025safety} & 2025 &
+      Embodied navigation safety &
+      Attack, defence, evaluation &
+      Term not used & --- & --- \\
+    Wang \emph{et al.}~\cite{wang2026comprehensive} & 2026 & VLN &
+      Action paradigm (hierarchical vs.\ monolithic) $\times$ model paradigm
+      (discriminative vs.\ generative) &
+      Used as a strategy class & GPU-hours tabulated; inference time measured
+      & Own experiments, 10 scenes \\
     \midrule
-    This article & 2026 & 2023--2026 & Role of the foundation model &
-    Yes (ZS-1--ZS-5) & Yes & Yes \\
+    This article & 2026 & VLN and object-goal navigation &
+      Role of the foundation model (R1--R5), with supervision as an
+      orthogonal attribute &
+      Yes (ZS-1--ZS-5, Table~\ref{tab:zsaudit}) &
+      Yes (Table~\ref{tab:zsvssup}) &
+      Corpus-wide (Table~\ref{tab:realrobot}) \\
     \bottomrule
   \end{tabular}
 \end{table*}
@@ -510,8 +568,8 @@ semantic navigation) are invisible to a query built from
 ``vision-and-language navigation'' and its hyphenation variants. Works whose
 contribution is a representation rather than a policy ---
 VLMaps, ConceptFusion~\cite{jatavallabhula2023conceptfusion},
-ConceptGraphs~\cite{gu2023conceptgraphs}, Code as
-Policies~\cite{liang2022code} --- never use ``navigation'' in the title at
+ConceptGraphs~\cite{gu2024conceptgraphs}, Code as
+Policies~\cite{liang2023code} --- never use ``navigation'' in the title at
 all, yet the zero-shot systems in Sec.~\ref{sec:zeroshot} are built
 directly on them. And works at NeurIPS, ICLR and CoRL are absent from the
 conventional indexes irrespective of the query.
@@ -775,7 +833,7 @@ a distinction Sec.~\ref{sec:eval} argues the standard metrics cannot make.
     \midrule
     R2R-CE~\cite{krantz2020beyond}            & Benchmark & Indoor & Step-by-step route & 5.6K English traj.~\cite{wei2025streamvln} & Primary continuous VLN benchmark \\
     RxR-CE~\cite{ku2020room}                  & Benchmark & Indoor & Step-by-step, 3 languages & 126K instructions~\cite{wei2025streamvln} & Long-horizon, multilingual \\
-    REVERIE~\cite{qi2019reverie}              & Benchmark & Indoor & Object + coarse hint & --- & Remote object grounding \\
+    REVERIE~\cite{qi2020reverie}              & Benchmark & Indoor & Object + coarse hint & --- & Remote object grounding \\
     SOON~\cite{zhu2021soon}                   & Benchmark & Indoor & Scenario description & --- & Coarse goal specification \\
     CVDN~\cite{thomason2019vision}            & Benchmark & Indoor & Dialogue history & --- & Under-specified goals \\
     \midrule
@@ -809,7 +867,7 @@ the default. Captioning and instruction-tuned
 VLMs~\cite{li2023blip,liu2023visual} are used where a textual description
 rather than a similarity score is required --- VLFM~\cite{yokoyama2024vlfm}
 uses BLIP-2 to produce the value that drives its frontier map. Open-set
-detection~\cite{liu2023grounding} and promptable
+detection~\cite{liu2024grounding} and promptable
 segmentation~\cite{kirillov2023segment} supply localisation; AO-Planner's
 affordance-grounded waypoints~\cite{chen2024affordances} are built on the
 latter.
@@ -897,10 +955,10 @@ egocentric frames into one.
 
 \subsection{Open-Vocabulary and Language-Queryable Maps}\label{sec:ovmaps}
 This is the structural enabler of the entire zero-shot branch, and it
-originates outside navigation. Visual language maps~\cite{huang2022visual}, open-vocabulary queryable
-scene representations~\cite{chen2022open}, open-set multimodal
+originates outside navigation. Visual language maps~\cite{huang2023visual}, open-vocabulary queryable
+scene representations~\cite{chen2023open}, open-set multimodal
 mapping~\cite{jatavallabhula2023conceptfusion} and open-vocabulary 3D scene
-graphs~\cite{gu2023conceptgraphs} make a map queryable by arbitrary text.
+graphs~\cite{gu2024conceptgraphs} make a map queryable by arbitrary text.
 Once that exists, ``go to the cat-shaped mug'' becomes a map query rather
 than a learning problem.
 
@@ -951,7 +1009,7 @@ from a small model.
 
 \subsection{Cross-Modal Attention and Alignment}
 The supervised lineage --- recurrent cross-modal
-BERT~\cite{hong2020vln}, history-aware
+BERT~\cite{hong2021recurrent}, history-aware
 transformers~\cite{chen2021history}, dual-scale graph
 transformers~\cite{chen2022think} --- established the alignment machinery
 that later systems inherit. The window's contribution to it is causal
@@ -1006,7 +1064,7 @@ works, the training signal, and the failure mode that follows from it.
 
 \subsection{Pre-Foundation Baselines}
 Sequence-to-sequence and recurrent cross-modal
-agents~\cite{hong2020vln}, history-aware
+agents~\cite{hong2021recurrent}, history-aware
 transformers~\cite{chen2021history} and topological graph
 policies~\cite{chen2022think} define the pre-window state of the art.
 They are trained on human demonstrations with imitation and auxiliary
@@ -1286,10 +1344,10 @@ next subgoal; execute it with a classical planner; update memory; repeat.
 Systems differ in four design decisions.
 
 The lineage is short and legible. CLIP-driven object
-search~\cite{gadre2022cows} established that an open-vocabulary detector plus
+search~\cite{gadre2023cows} established that an open-vocabulary detector plus
 frontier exploration is already a navigation agent; LM-Nav~\cite{shah2022lm}
 and SayCan~\cite{ahn2022do} established language models as robot planners
-outside navigation; LangNav~\cite{pan2023langnav} took the extreme position
+outside navigation; LangNav~\cite{pan2024langnav} took the extreme position
 that language can serve as the \emph{perceptual} representation itself; and
 March in Chat~\cite{qiao2023march} introduced interactive prompting for
 remote object grounding.

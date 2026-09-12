@@ -32,7 +32,7 @@ tools/                 the pipeline, in the order it runs
   build.py               index.html
   make_latex.py          latex/numbers.tex — corpus figures as LaTeX macros
   make_bib.py            latex/refs.bib from doi.org
-  make_bib_context.py    latex/refs_context.bib — the pre-2023 works, resolved not typed
+  make_bib_context.py    latex/refs_context.bib — what the corpus excludes but the text cites, resolved not typed
   clean_bib.py           makes harvested BibTeX safe for pdflatex (HTML tags, Unicode)
   check_cites.py         every \cite resolves, nothing uncited — exits non-zero if not
   lint_latex.py          braces, environments, tabular column counts, missing \input
@@ -57,11 +57,11 @@ data/                  generated; the corpus lives here
   pdf/ txt/              the fetched open-access PDFs and their extracted text (not tracked)
 
 latex/                 the manuscript (upload this directory to Overleaf)
-  main.tex               the manuscript: 14 sections, 7 tables, 20 pages
+  main.tex               the manuscript: 15 sections, 7 tables, 15 figures, 25 pages
   numbers.tex            generated — every corpus figure the paper quotes
   queries.tex            generated — the 44 search phrases, exactly as harvest.py sends them
   refs.bib               generated — the reading list, from the publishers' own records
-  refs_context.bib       generated — the pre-2023 foundational works
+  refs_context.bib       generated — the pre-2023 foundations, and the prior surveys Table I compares against
   fig/selection-flow.tex generated — how 44 phrases became 98 papers, in TikZ
   fig/taxonomy.tex, zs-loop.tex, organisation.tex   original TikZ figures
   fig/*.png, *.jpg       figures reproduced from CC-licensed papers
